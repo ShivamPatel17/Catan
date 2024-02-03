@@ -1,7 +1,7 @@
 const TAU = 2 * Math.PI;
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  main();
+main();
 })
 const main = () => {
   const ctx = document.getElementById("drawing").getContext('2d');
@@ -132,3 +132,33 @@ const generateColors = (count, saturation = 1.0, lightness = 0.5, alpha = 1.0) =
       `${Math.floor(lightness * 100)}%`,
       alpha
     ].join(', ')})`);
+
+
+    function getItems() {
+      // Specify the API endpoint
+      const apiUrl = 'http://localhost:3000/items';
+    
+      // Make a GET request to the API
+      fetch(apiUrl)
+        .then(response => {
+          // Check if the request was successful (status code 200)
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+    
+          // Parse the JSON response
+          return response.json();
+        })
+        .then(data => {
+          // Handle the retrieved items
+          console.log('Items:', data);
+          // You can perform further processing with the items here
+        })
+        .catch(error => {
+          // Handle any errors that occurred during the fetch
+          console.error('Fetch error:', error);
+        });
+    }
+    
+    // Call the function to get items when needed
+    console.log(getItems());
