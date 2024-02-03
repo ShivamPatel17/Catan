@@ -11,8 +11,9 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	http.HandleFunc("/hi", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "./index.html")
+		http.ServeFile(w, r, "./static/catan.html")
 	})
+
 	log.Print("Listening on :3000...")
 	err := http.ListenAndServe(":3000", nil)
 	if err != nil {
