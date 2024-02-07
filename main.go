@@ -3,6 +3,7 @@ package main
 // https://www.alexedwards.net/blog/serving-static-sites-with-go
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -13,6 +14,10 @@ func main() {
 
 	http.HandleFunc("/hi", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "./static/catan.html")
+	})
+
+	http.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "healthy2")
 	})
 
 	http.HandleFunc("/items", getItemsHandler)
