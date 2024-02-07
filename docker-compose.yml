@@ -1,7 +1,11 @@
 version: '3.8'
 services:
   app:
+    image: catan-app
+    working_dir: /app
     build: .
     container_name: catanapp
     ports:
       - "3000:3000"
+    volumes:
+    - .:/app
