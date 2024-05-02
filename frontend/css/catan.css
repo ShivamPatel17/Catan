@@ -1,0 +1,114 @@
+body, html {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+#game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#game-board {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+  background-color: #8cb3d9;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.tile {
+  width: 90px; /* Adjust based on your design */
+  height: 103.92px; /* Calculated for the hexagon shape */
+  margin: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.tile:hover {
+  transform: scale(1.1);
+}
+
+/* Resource-specific styles for better visual differentiation */
+.wood { background-color: #deb887; }
+.brick { background-color: #b22222; }
+.sheep { backgrobody, html {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+#game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#game-board {
+  display: flex;
+  flex-wrap: wrap;
+  width: 660px; /* Adjust based on tile size and board layout */
+  margin: 20px;
+  justify-content: center;
+  position: relative;
+}
+
+.tile {
+  width: 100px; /* Adjust for your tile size */
+  height: 115.47px; /* Height to maintain hexagon aspect ratio */
+  background-color: #eee;
+  margin: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+/* Resource-specific styles */
+.wood { background-color: #deb887; }
+.brick { background-color: #b22222; }
+.sheep { background-color: #7cfc00; }
+.wheat { background-color: #f0e68c; }
+.ore { background-color: #708090; }
+.desert { background-color: #f4a460; }
+
+/* Adjusting rows for hexagonal layout */
+.tile:nth-child(1) { margin-left: 150px; } /* First row with 1 tile */
+.tile:nth-child(2), .tile:nth-child(4) { margin-left: 75px; } /* Second row with 3 tiles */
+.tile:nth-child(7) { margin-left: 0; } /* Fourth row with 4 tiles, adjust based on actual layout */
+.tile:nth-child(12), .tile:nth-child(14) { margin-left: 75px; } /* Fifth row with 3 tiles */
+.tile:nth-child(17) { margin-left: 150px; } /* Last row with 1 tile */
+nd-color: #7cfc00; }
+.wheat { background-color: #f0e68c; }
+.ore { background-color: #708090; }
+.desert { background-color: #f4a460; }
+
+#player-info {
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#resources, button {
+  margin: 10px 0;
+  font-size: 16px;
+}

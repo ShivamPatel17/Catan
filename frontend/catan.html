@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settlers of Catan Board</title>
+    <link rel="stylesheet" href="/static/css/catan.css">
+</head>
+<body>
+    <main id="game-container">
+        <section id="game-board">
+            <!-- Row 1 -->
+            <div class="tile desert"></div>
+            <!-- Row 2 -->
+            <div class="tile sheep"></div>
+            <div class="tile wood"></div>
+            <div class="tile wheat"></div>
+            <!-- Row 3 -->
+            <div class="tile brick"></div>
+            <div class="tile ore"></div>
+            <div class="tile wood"></div>
+            <div class="tile sheep"></div>
+            <!-- Row 4 -->
+            <div class="tile wheat"></div>
+            <div class="tile brick"></div>
+            <div class="tile desert"></div>
+            <div class="tile ore"></div>
+            <div class="tile wheat"></div>
+            <!-- Row 5 -->
+            <div class="tile sheep"></div>
+            <div class="tile wood"></div>
+            <div class="tile brick"></div>
+            <!-- Row 6 -->
+            <div class="tile ore"></div>
+        </section>
+        <aside id="player-info">
+            <div id="resources">Player Resources: Wood 1, Brick 2, Sheep 3, Wheat 4, Ore 0</div>
+            <button id="roll-dice" disabled>Roll Dice</button>
+            <button id="end-turn" disabled>End Turn</button>
+        </aside>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

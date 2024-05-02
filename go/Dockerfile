@@ -1,5 +1,5 @@
 # Start from a Debian-based image with the Go 1.x SDK
-FROM golang:1.21-alpine
+FROM golang:1.22-alpine
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
