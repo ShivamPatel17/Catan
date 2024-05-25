@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -28,32 +27,11 @@ func enableCors(next http.Handler) http.Handler {
 
 func main() {
 	fs := http.FileServer(http.Dir("./static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
-
-	http.HandleFunc("/hi", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "./static/catan.html")
-	})
-
-	http.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "healthy2")
-	})
-
-	http.HandleFunc("/items", getItemsHandler)
-
-	http.HandleFunc("/roll", rollHandler)
-
 	// Create a new ServeMux
 	mux := http.NewServeMux()
 
 	// Register handlers with the ServeMux
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
-	mux.HandleFunc("/hi", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "./static/catan.html")
-	})
-	mux.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "healthy2")
-	})
-	mux.HandleFunc("/items", getItemsHandler)
 	mux.HandleFunc("/roll", rollHandler)
 
 	// Wrap the ServeMux with the CORS middleware
@@ -76,32 +54,6 @@ func rollHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Convert items to JSON
 	jsonData, err := json.Marshal(roll)
-	if err != nil {
-		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
-		return
-	}
-
-	// Set content type and send the response
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonData)
-}
-
-// Handler function to handle requests to /items endpoint
-func getItemsHandler(w http.ResponseWriter, r *http.Request) {
-	// Define a struct to represent your data
-	type Item struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	}
-	// In-memory storage for the example
-	var items = []Item{
-		{1, "Item 1"},
-		{2, "Item 2"},
-		{3, "Item 3"},
-	}
-
-	// Convert items to JSON
-	jsonData, err := json.Marshal(items)
 	if err != nil {
 		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
 		return

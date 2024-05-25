@@ -5,10 +5,8 @@ let game;
 let gameOptions = {
   // card width, in pixels
   diceWidth: 64,
-
   // card height, in pixels
   diceHeight: 64,
-
   // card scale. 1 = original size, 0.5 half size and so on
   cardScale: 0.8,
 };
@@ -61,21 +59,14 @@ class playGame extends Phaser.Scene {
         frameHeight: gameOptions.diceHeight,
       }
     );
-
+    // load hexagons
     this.load.image("hexagon", "assets/images/hexagon.png");
   }
 
   create() {
     this.die = this.add.sprite(700, 550, "redDie").setInteractive();
-    this.die.setFrame(2);
-    // Add a keyboard listener for the spacebar
     this.input.keyboard.on("keydown-SPACE", this.rollDie, this);
-
-    // Create an array to hold references to the sprites
-    this.sprites = [];
     this.loadhex();
-
-    console.log("yerr");
   }
 
   // Asynchronous function to roll the die
