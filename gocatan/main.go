@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/json"
-	comps "gocatan/components"
+	board "gocatan/board"
 	"log"
-	"math/rand"
 	"net/http"
 )
 
@@ -32,8 +30,8 @@ func main() {
 
 	// Register handlers with the ServeMux
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
-	mux.HandleFunc("/roll", rollHandler)
-	mux.HandleFunc("/hexagon", hexagonHandler)
+	mux.HandleFunc("/roll", board.RollHandler)
+	mux.HandleFunc("/hexagon", board.HexagonHandler)
 
 	// Wrap the ServeMux with the CORS middleware
 	handler := enableCors(mux)
@@ -43,32 +41,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func hexagonHandler(w http.ResponseWriter, r *http.Request) {
-	// Create a slice of anonymous structs with fields X and Y
-	points := []comps.HexagonTile{
-		{X: 100, Y: 200},
-		{X: 300, Y: 400},
-	}
-	hex, _ := json.Marshal(points)
-	w.Write(hex)
-}
-
-// Handler function to handle requests to /items endpoint
-func rollHandler(w http.ResponseWriter, r *http.Request) {
-	// Seed the random number generator to ensure different results each run
-	// Generate a random number between 1 and 6
-	roll := rand.Intn(6) + 1
-
-	// Convert items to JSON
-	jsonData, err := json.Marshal(roll)
-	if err != nil {
-		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
-		return
-	}
-
-	// Set content type and send the response
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonData)
 }
