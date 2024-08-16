@@ -84,21 +84,24 @@ class playGame extends Phaser.Scene {
     }
   }
 
-  loadhex() {
-    // Create multiple sprites in a loop
-    for (let i = 0; i < 10; i++) {
-      // Calculate x and y positions for each sprite
-      let x = 100 + i * 60;
-      let y = 300;
+  async loadhex() {
+    try {
+      const hexagons = await fetchData("http://localhost:3000/hexagon");
+      console.log(hexagons);
+      // Create multiple sprites in a loop
+      for (let i = 0; i < hexagons.length; i++) {
+        // Calculate x and y positions for each sprite
+        let x = hexagons[i].X;
+        let y = hexagons[i].Y;
 
-      // Create a sprite and add it to the scene
-      const sprite = this.add.sprite(x, y, "hexagon");
+        // Create a sprite and add it to the scene
+        const sprite = this.add.sprite(x, y, "hexagon");
 
-      // Customize the sprite if needed
-      sprite.setScale(1.0);
-
-      // Store the sprite in the array for later use
-      this.sprites.push(sprite);
+        // Customize the sprite if needed
+        sprite.setScale(2.0);
+      }
+    } catch (error) {
+      console.log("Error loading the hexagon tiles:", error);
     }
   }
 }
