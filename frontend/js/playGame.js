@@ -16,7 +16,7 @@ export class playGame extends Phaser.Scene {
         frameHeight: gameOptions.diceHeight,
       }
     );
-    this.load.image("hexagon", "assets/images/hexagon.png");
+    this.load.image("hexagon", "assets/board/hexagon/brick.png");
   }
 
   create() {
@@ -44,7 +44,12 @@ export class playGame extends Phaser.Scene {
         let x = hexagons[i].X;
         let y = hexagons[i].Y;
         const sprite = this.add.sprite(x, y, "hexagon");
-        sprite.setScale(2.0);
+        console.log(gameOptions);
+
+        sprite.setDisplaySize(
+          gameOptions.hexagonImageWidth,
+          gameOptions.hexagonImageHeight
+        );
       }
     } catch (error) {
       console.log("Error loading the hexagon tiles:", error);
