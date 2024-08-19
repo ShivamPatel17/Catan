@@ -1,6 +1,9 @@
 package board
 
-import "math"
+import (
+	"math"
+	"math/rand"
+)
 
 type Engine struct {
 	hexSideSize    float32
@@ -18,6 +21,7 @@ func (e *Engine) BuildMap(relativeTiles *RelativeHexagonTile) ([](ConcreteHexago
 		})
 	}
 	e.buildRelativeHexTiles(&relativeTiles.AdjacentTiles, &concreteTiles[0], &concreteTiles)
+	assignResources(&concreteTiles)
 	return concreteTiles, nil
 }
 
@@ -65,4 +69,22 @@ func (e *Engine) buildRelativeHexTiles(tiles *[]DirectionalHexagonTile, relative
 		*concreteTiles = append(*concreteTiles, ConcreteTile)
 		e.buildRelativeHexTiles(&directionalTile.relativeHexTile.AdjacentTiles, &ConcreteTile, concreteTiles)
 	}
+}
+
+func assignResources(concreteTiles *[]ConcreteHexagonTile) {
+	for i := range *concreteTiles {
+		(*concreteTiles)[i].Resource = getRandomResource()
+	}
+}
+func getRandomResource() Resource {
+	// Seed the random number generator to ensure different results on each run
+
+	// Create a slice of all possible resources
+	resources := []Resource{Sheep, Wheat, Ore, Wood, Brick}
+
+	// Select a random index
+	randomIndex := rand.Intn(len(resources))
+
+	// Return the randomly selected resource
+	return resources[randomIndex]
 }

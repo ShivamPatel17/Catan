@@ -56,15 +56,15 @@ export class playGame extends Phaser.Scene {
             sprite = this.add.sprite(x, y, "sheep_hex");
             break;
           case "wheat":
-            sprite = this.add.sprite(x, y, "brick_hex");
+            sprite = this.add.sprite(x, y, "wheat_hex");
             break;
           case "ore":
-            sprite = this.add.sprite(x, y, "brick_hex");
+            sprite = this.add.sprite(x, y, "ore_hex");
             break;
           case "wood":
-            sprite = this.add.sprite(x, y, "brick_hex");
+            sprite = this.add.sprite(x, y, "wood_hex");
             break;
-          default:
+          case "brick":
             sprite = this.add.sprite(x, y, "brick_hex");
             break;
         }
