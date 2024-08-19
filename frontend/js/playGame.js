@@ -1,8 +1,8 @@
 import { fetchData } from "./fetchData.js";
 import { gameOptions } from "./gameConfig.js";
-
+import { config } from "./gameConfig.js";
 export class playGame extends Phaser.Scene {
-  constructor() {
+  constructor(config) {
     super("PlayGame");
     this.redDieNum = 1;
   }
@@ -16,7 +16,11 @@ export class playGame extends Phaser.Scene {
         frameHeight: gameOptions.diceHeight,
       }
     );
-    this.load.image("hexagon", "assets/board/hexagon/brick.png");
+    this.load.image("brick_hex", "assets/board/hexagon/brick.png");
+    this.load.image("sheep_hex", "assets/board/hexagon/sheep.png");
+    this.load.image("wood_hex", "assets/board/hexagon/wood.png");
+    this.load.image("ore_hex", "assets/board/hexagon/ore.png");
+    this.load.image("wheat_hex", "assets/board/hexagon/wheat.png");
   }
 
   create() {
@@ -43,13 +47,28 @@ export class playGame extends Phaser.Scene {
       for (let i = 0; i < hexagons.length; i++) {
         let x = hexagons[i].X;
         let y = hexagons[i].Y;
-        const sprite = this.add.sprite(x, y, "hexagon");
-        console.log(gameOptions);
+        let resource = hexagons[i].Resource;
 
-        sprite.setDisplaySize(
-          gameOptions.hexagonImageWidth,
-          gameOptions.hexagonImageHeight
-        );
+        let sprite;
+        switch (resource) {
+          case "sheep":
+            console.log("adding sheep");
+            sprite = this.add.sprite(x, y, "sheep_hex");
+            break;
+          case "wheat":
+            sprite = this.add.sprite(x, y, "brick_hex");
+            break;
+          case "ore":
+            sprite = this.add.sprite(x, y, "brick_hex");
+            break;
+          case "wood":
+            sprite = this.add.sprite(x, y, "brick_hex");
+            break;
+          default:
+            sprite = this.add.sprite(x, y, "brick_hex");
+            break;
+        }
+        sprite.setDisplaySize(config.HexWidth, config.HexHeight);
       }
     } catch (error) {
       console.log("Error loading the hexagon tiles:", error);

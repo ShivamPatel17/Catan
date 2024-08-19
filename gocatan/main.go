@@ -2,6 +2,7 @@ package main
 
 import (
 	board "gocatan/board"
+	"gocatan/config"
 	"log"
 	"net/http"
 )
@@ -32,6 +33,7 @@ func main() {
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("/roll", board.RollHandler)
 	mux.HandleFunc("/hexagon", board.HexagonHandler)
+	mux.HandleFunc("/config", config.GetConfigHandler)
 
 	// Wrap the ServeMux with the CORS middleware
 	handler := enableCors(mux)

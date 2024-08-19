@@ -1,5 +1,6 @@
 // Import the playGame class from playGame.js
 import { playGame } from "./playGame.js";
+import { fetchData } from "./fetchData.js";
 
 // Define the base scale
 const hexagonImageScale = 0.3;
@@ -12,11 +13,6 @@ const hexagonImageWidth = 440;
 export let gameOptions = {
   diceWidth: 64,
   diceHeight: 64,
-
-  // Hexagon tile configs
-  hexagonImageScale: hexagonImageScale,
-  hexagonImageHeight: hexagonImageHeight * hexagonImageScale,
-  hexagonImageWidth: hexagonImageWidth * hexagonImageScale,
 };
 
 // Export game configuration
@@ -32,3 +28,17 @@ export let gameConfig = {
   },
   scene: playGame, // Reference to the playGame class
 };
+
+export let config = null; // Declare and export gameConfigGo
+
+(async function () {
+  try {
+    // Fetch the game configuration
+    const url = "http://localhost:3000/config";
+    let backendConfig = await fetchData(url); // Update the exported variable
+    console.log(backendConfig);
+    config = { ...backendConfig };
+  } catch (error) {
+    console.error("Error initializing the game: ", error);
+  }
+})();
