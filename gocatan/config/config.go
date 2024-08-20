@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	HexagonImageScale  = 0.5
+	HexagonImageScale  = 0.3
 	HexagonImageHeight = 508.0 * HexagonImageScale
 	HexagonImageWidth  = 440.0 * HexagonImageScale
 )

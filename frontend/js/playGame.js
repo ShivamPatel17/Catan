@@ -69,9 +69,33 @@ export class playGame extends Phaser.Scene {
             break;
         }
         sprite.setDisplaySize(config.HexWidth, config.HexHeight);
+        sprite.setInteractive();
+        sprite.on("pointerover", function () {
+          // https://newdocs.phaser.io/docs/3.80.0/Phaser.GameObjects.GameObject#On
+          onHover(sprite);
+        });
+
+        // Add the 'pointerout' event listener (optional)
+        sprite.on("pointerout", function () {
+          onHoverOut(sprite);
+        });
       }
     } catch (error) {
       console.log("Error loading the hexagon tiles:", error);
     }
   }
+}
+
+// Function to call when hovering over the sprite
+function onHover(sprite) {
+  console.log("Hovering over sprite");
+  // You can also add more actions here, like changing the sprite's appearance
+  sprite.setTint(0xff0000); // Change the color of the sprite on hover
+}
+
+// Function to call when the pointer leaves the sprite (optional)
+function onHoverOut(sprite) {
+  console.log("No longer hovering over sprite");
+  // Revert any changes made during hover
+  sprite.clearTint(); // Revert the color of the sprite
 }
