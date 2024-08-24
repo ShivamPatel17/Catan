@@ -1,5 +1,5 @@
 import { fetchData } from "./fetchData.js";
-import { gameOptions } from "./gameConfig.js";
+import { gameConfig, gameOptions } from "./gameConfig.js";
 import { config } from "./gameConfig.js";
 export class playGame extends Phaser.Scene {
   constructor(config) {
@@ -27,6 +27,7 @@ export class playGame extends Phaser.Scene {
     this.die = this.add.sprite(700, 550, "redDie").setInteractive();
     this.input.keyboard.on("keydown-SPACE", this.rollDie, this);
     this.loadhex();
+    this.loadVertices();
   }
 
   async rollDie() {
@@ -42,8 +43,9 @@ export class playGame extends Phaser.Scene {
 
   async loadhex() {
     try {
-      const hexagons = await fetchData("http://localhost:3000/hexagon");
-      console.log(hexagons);
+      const board = await fetchData("http://localhost:3000/board");
+      console.log(board);
+      let hexagons = board.Tiles;
       for (let i = 0; i < hexagons.length; i++) {
         let x = hexagons[i].X;
         let y = hexagons[i].Y;
@@ -70,6 +72,7 @@ export class playGame extends Phaser.Scene {
         }
         sprite.setDisplaySize(config.HexWidth, config.HexHeight);
         sprite.setInteractive();
+        sprite.setDepth(1);
         sprite.on("pointerover", function () {
           // https://newdocs.phaser.io/docs/3.80.0/Phaser.GameObjects.GameObject#On
           onHover(sprite);
@@ -82,20 +85,35 @@ export class playGame extends Phaser.Scene {
       }
     } catch (error) {
       console.log("Error loading the hexagon tiles:", error);
+      sprite.setInteractive();
+      sprite.on("pointerover", function () {
+        // https://newdocs.phaser.io/docs/3.80.0/Phaser.GameObjects.GameObject#On
+        onHover(sprite);
+      });
+    }
+  }
+
+  async loadVertices() {
+    try {
+      const board = await fetchData(gameConfig.baseUrl + "/board");
+      let vertices = board.Vertices;
+      for (let i = 0; i < vertices.length; i++) {
+        let vertice = vertices[i];
+        console.log(vertice);
+        let sprite = this.add.sprite(vertice.X, vertice.Y, "brick_hex");
+        sprite.setDisplaySize(30, 30);
+        sprite.setDepth(2);
+      }
+    } catch (error) {
+      console.log("Error loading vertices");
     }
   }
 }
 
-// Function to call when hovering over the sprite
 function onHover(sprite) {
-  console.log("Hovering over sprite");
-  // You can also add more actions here, like changing the sprite's appearance
   sprite.setTint(0xff0000); // Change the color of the sprite on hover
 }
 
-// Function to call when the pointer leaves the sprite (optional)
 function onHoverOut(sprite) {
-  console.log("No longer hovering over sprite");
-  // Revert any changes made during hover
   sprite.clearTint(); // Revert the color of the sprite
 }

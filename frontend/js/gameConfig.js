@@ -9,6 +9,8 @@ const hexagonImageScale = 0.3;
 const hexagonImageHeight = 508;
 const hexagonImageWidth = 440;
 
+const baseUrl = "http://localhost:3000";
+
 // Export game options
 export let gameOptions = {
   diceWidth: 64,
@@ -17,6 +19,7 @@ export let gameOptions = {
 
 // Export game configuration
 export let gameConfig = {
+  baseUrl: baseUrl,
   type: Phaser.AUTO,
   backgroundColor: 0x4488aa,
   scale: {

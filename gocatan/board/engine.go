@@ -6,12 +6,12 @@ import (
 )
 
 type Engine struct {
-	hexSideSize    float32
-	hexTotalWidth  float32
-	hexTotalHeight float32
+	HexSideSize    float32
+	HexTotalWidth  float32
+	HexTotalHeight float32
 }
 
-func (e *Engine) BuildMap(relativeTiles *RelativeHexagonTile) ([](ConcreteHexagonTile), error) {
+func (e *Engine) BuildHexagons(relativeTiles *RelativeHexagonTile) ([](ConcreteHexagonTile), error) {
 	concreteTiles := make([]ConcreteHexagonTile, 0)
 	ConcreteTile := relativeTiles.Concrete
 	if ConcreteTile != nil {
@@ -35,34 +35,34 @@ func (e *Engine) buildRelativeHexTiles(tiles *[]DirectionalHexagonTile, relative
 		switch directionalTile.direction {
 		case TopRight:
 			ConcreteTile = ConcreteHexagonTile{
-				X: relativeTo.X + int(math.Sqrt(3)*float64(e.hexSideSize)/2.0),
-				Y: relativeTo.Y - int((3*e.hexSideSize)/2.0),
+				X: relativeTo.X + int(math.Sqrt(3)*float64(e.HexSideSize)/2.0),
+				Y: relativeTo.Y - int((3*e.HexSideSize)/2.0),
 			}
 		case TopLeft:
 			ConcreteTile = ConcreteHexagonTile{
-				X: relativeTo.X - int(math.Sqrt(3)*float64(e.hexSideSize)/2.0),
-				Y: relativeTo.Y - int((3*e.hexSideSize)/2.0),
+				X: relativeTo.X - int(math.Sqrt(3)*float64(e.HexSideSize)/2.0),
+				Y: relativeTo.Y - int((3*e.HexSideSize)/2.0),
 			}
 		case MiddleRight:
 			ConcreteTile = ConcreteHexagonTile{
-				X: relativeTo.X + int(e.hexTotalWidth),
+				X: relativeTo.X + int(e.HexTotalWidth),
 				Y: relativeTo.Y,
 			}
 		case MiddleLeft:
 			ConcreteTile = ConcreteHexagonTile{
-				X:        relativeTo.X - int(e.hexTotalWidth),
+				X:        relativeTo.X - int(e.HexTotalWidth),
 				Y:        relativeTo.Y,
 				Resource: Sheep,
 			}
 		case BottomRight:
 			ConcreteTile = ConcreteHexagonTile{
-				X: relativeTo.X + int(math.Sqrt(3)*float64(e.hexSideSize)/2.0),
-				Y: relativeTo.Y + int((3*e.hexSideSize)/2.0),
+				X: relativeTo.X + int(math.Sqrt(3)*float64(e.HexSideSize)/2.0),
+				Y: relativeTo.Y + int((3*e.HexSideSize)/2.0),
 			}
 		case BottomLeft:
 			ConcreteTile = ConcreteHexagonTile{
-				X: relativeTo.X - int(math.Sqrt(3)*float64(e.hexSideSize)/2.0),
-				Y: relativeTo.Y + int((3*e.hexSideSize)/2.0),
+				X: relativeTo.X - int(math.Sqrt(3)*float64(e.HexSideSize)/2.0),
+				Y: relativeTo.Y + int((3*e.HexSideSize)/2.0),
 			}
 		}
 

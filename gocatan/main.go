@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gocatan/api"
 	board "gocatan/board"
 	"gocatan/config"
 	"log"
@@ -32,7 +33,7 @@ func main() {
 	// Register handlers with the ServeMux
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("/roll", board.RollHandler)
-	mux.HandleFunc("/hexagon", board.HexagonHandler)
+	mux.HandleFunc("/board", api.BoardHandler)
 	mux.HandleFunc("/config", config.GetConfigHandler)
 
 	// Wrap the ServeMux with the CORS middleware

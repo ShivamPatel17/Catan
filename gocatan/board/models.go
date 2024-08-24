@@ -31,7 +31,14 @@ type RelativeHexagonTile struct {
 }
 
 type ConcreteHexagonTile struct {
+	id       int64
 	X        int
 	Y        int
 	Resource Resource
+}
+
+type Vertice struct {
+	id int
+	X  int
+	Y  int
 }
