@@ -17,8 +17,14 @@ type Config struct {
 	HexHeight float32
 }
 
-func GetConfigHandler(w http.ResponseWriter, r *http.Request) {
+func NewConfig() Config {
+	return Config{
+		HexWidth:  HexagonImageWidth,
+		HexHeight: HexagonImageHeight,
+	}
+}
 
+func GetConfigHandler(w http.ResponseWriter, r *http.Request) {
 	config := Config{
 		HexWidth:  HexagonImageWidth,
 		HexHeight: HexagonImageHeight,

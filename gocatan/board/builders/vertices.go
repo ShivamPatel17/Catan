@@ -1,12 +1,12 @@
-package board
+package builders
 
-import "gocatan/board"
+import models "gocatan/board/models"
 
-func BuildVertices(concreteTiles []board.ConcreteHexagonTile) []board.Vertice {
-	vertices := make([]board.Vertice, 0)
+func BuildVertices(concreteTiles []models.ConcreteHexagonTile) []models.Vertice {
+	vertices := make([]models.Vertice, 0)
 	for _, concreteTile := range concreteTiles {
 		vertices = append(vertices,
-			board.Vertice{
+			models.Vertice{
 				X: concreteTile.X,
 				Y: concreteTile.Y,
 			},

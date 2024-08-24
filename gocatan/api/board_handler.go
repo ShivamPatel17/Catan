@@ -1,37 +1,35 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
-	"gocatan/board"
 	builders "gocatan/board/builders"
+	"gocatan/board/models"
 	"gocatan/config"
 	"net/http"
 )
 
-type GameBoard struct {
-	Tiles    []board.ConcreteHexagonTile
-	Vertices []board.Vertice
+func BoardHandler(w http.ResponseWriter, r *http.Request) {
+	cfg := config.NewConfig()
+	ctx := context.Background()
+	gb := buildBoard(ctx, cfg)
+	resp, _ := json.Marshal(gb)
+
+	w.Write(resp)
 }
 
-func BoardHandler(w http.ResponseWriter, r *http.Request) {
+func buildBoard(_ context.Context, cfg config.Config) models.GameBoard {
 	// can use this to pass configuation from the client in the future
-	engine := board.Engine{
-		HexSideSize:    config.HexagonImageHeight / 2,
-		HexTotalWidth:  config.HexagonImageWidth,
-		HexTotalHeight: config.HexagonImageHeight,
-	}
+	engine := builders.NewHexagonEngine(cfg)
 
-	regularMap := board.RegularBoard()
+	regularMap := models.RegularBoard()
 
 	concreteHexTiles, _ := engine.BuildHexagons(&regularMap)
 	vertices := builders.BuildVertices(concreteHexTiles)
 
-	gb := GameBoard{
+	gb := models.GameBoard{
 		Tiles:    concreteHexTiles,
 		Vertices: vertices,
 	}
-
-	resp, _ := json.Marshal(gb)
-
-	w.Write(resp)
+	return gb
 }
