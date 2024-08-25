@@ -22,23 +22,18 @@ const (
 )
 
 type DirectionalHexagonTile struct {
-	Direction       Direction
-	RelativeHexTile RelativeHexagonTile
+	Direction       Direction           `json:"direction"`
+	RelativeHexTile RelativeHexagonTile `json:"relative_hex_tile"`
 }
+
 type RelativeHexagonTile struct {
-	AdjacentTiles []DirectionalHexagonTile
-	Concrete      *ConcreteHexagonTile
+	AdjacentTiles []DirectionalHexagonTile `json:"adjacent_tiles"`
+	Concrete      *ConcreteHexagonTile     `json:"concrete"`
 }
 
 type ConcreteHexagonTile struct {
-	Id       int64
-	X        float64
-	Y        float64
-	Resource Resource
-}
-
-type Vertice struct {
-	Id int64
-	X  float64
-	Y  float64
+	Id       int64    `json:"id"`
+	X        float64  `json:"x"`
+	Y        float64  `json:"y"`
+	Resource Resource `json:"resource"`
 }

@@ -26,10 +26,12 @@ func buildBoard(_ context.Context, cfg config.Config) models.GameBoard {
 
 	concreteHexTiles, _ := engine.BuildHexagons(&regularMap)
 	vertices := engine.BuildVertices(concreteHexTiles)
+	adjVerticies := engine.BuildAdjacentVerticesMap(vertices)
 
 	gb := models.GameBoard{
-		Tiles:    concreteHexTiles,
-		Vertices: vertices,
+		Tiles:             concreteHexTiles,
+		Vertices:          vertices,
+		AdjacentVerticies: adjVerticies,
 	}
 	return gb
 }

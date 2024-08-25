@@ -45,11 +45,11 @@ export class playGame extends Phaser.Scene {
     try {
       const board = await fetchData("http://localhost:3000/board");
       console.log(board);
-      let hexagons = board.Tiles;
+      let hexagons = board.tiles;
       for (let i = 0; i < hexagons.length; i++) {
-        let x = hexagons[i].X;
-        let y = hexagons[i].Y;
-        let resource = hexagons[i].Resource;
+        let x = hexagons[i].x;
+        let y = hexagons[i].y;
+        let resource = hexagons[i].resource;
 
         let sprite;
         switch (resource) {
@@ -95,10 +95,10 @@ export class playGame extends Phaser.Scene {
   async loadVertices() {
     try {
       const board = await fetchData(gameConfig.baseUrl + "/board");
-      let vertices = board.Vertices;
+      let vertices = board.vertices;
       for (let i = 0; i < vertices.length; i++) {
         let vertice = vertices[i];
-        let sprite = this.add.sprite(vertice.X, vertice.Y, "brick_hex");
+        let sprite = this.add.sprite(vertice.x, vertice.y, "brick_hex");
         sprite.setDisplaySize(30, 30);
         sprite.setDepth(2);
       }
