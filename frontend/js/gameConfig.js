@@ -1,5 +1,5 @@
 // Import the playGame class from playGame.js
-import { playGame } from "./playGame.js";
+import { PlayGame } from "./playGame.js";
 import { fetchData } from "./fetchData.js";
 
 // Define the base scale
@@ -29,7 +29,7 @@ export let gameConfig = {
     width: 1200,
     height: 900,
   },
-  scene: playGame, // Reference to the playGame class
+  scene: PlayGame, // Reference to the playGame class
 };
 
 export let config = null; // Declare and export gameConfigGo

@@ -1,7 +1,7 @@
 package config
 
 const (
-	HexagonImageScale  = 0.3
+	HexagonImageScale  = 0.4
 	HexagonImageHeight = 508.0 * HexagonImageScale // 508 is the height of the picture from the front end. Eventually, the front end should pass these values to the backend during initialization
 	HexagonImageWidth  = 440.0 * HexagonImageScale
 	VerticeDiamter     = 10

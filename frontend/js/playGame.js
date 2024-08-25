@@ -1,26 +1,15 @@
 import { fetchData } from "./fetchData.js";
-import { gameConfig, gameOptions } from "./gameConfig.js";
+import { gameConfig } from "./gameConfig.js";
 import { config } from "./gameConfig.js";
-export class playGame extends Phaser.Scene {
+import { loadAssets } from "./loadAssets.js";
+export class PlayGame extends Phaser.Scene {
   constructor(config) {
-    super("PlayGame");
+    super({ key: "PlayGame" });
     this.redDieNum = 1;
   }
 
   preload() {
-    this.load.spritesheet(
-      "redDie",
-      "boardgamePack_v2/Spritesheets/diceRed.png",
-      {
-        frameWidth: gameOptions.diceWidth,
-        frameHeight: gameOptions.diceHeight,
-      }
-    );
-    this.load.image("brick_hex", "assets/board/hexagon/brick.png");
-    this.load.image("sheep_hex", "assets/board/hexagon/sheep.png");
-    this.load.image("wood_hex", "assets/board/hexagon/wood.png");
-    this.load.image("ore_hex", "assets/board/hexagon/ore.png");
-    this.load.image("wheat_hex", "assets/board/hexagon/wheat.png");
+    loadAssets(this, gameConfig);
   }
 
   create() {
