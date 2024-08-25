@@ -1,6 +1,8 @@
 package models
 
 import (
+	"math"
+
 	"github.com/google/uuid"
 )
 
@@ -18,4 +20,9 @@ func NewVertice(x float64, y float64) Vertice {
 		X:  x,
 		Y:  y,
 	}
+}
+
+// returns true if vert1 is the same as vert2
+func IsSameVertice(vert1 Vertice, vert2 Vertice, tolerance float64) bool {
+	return math.Abs(vert1.X-vert2.X) < tolerance && math.Abs(vert1.Y-vert2.Y) < tolerance
 }

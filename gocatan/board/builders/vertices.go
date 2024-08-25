@@ -2,8 +2,7 @@ package builders
 
 import (
 	models "gocatan/board/models"
-	"gocatan/internal"
-	mathhelper "gocatan/internal"
+	mathhelper "gocatan/internal/math"
 	"math"
 
 	"github.com/google/uuid"
@@ -43,7 +42,7 @@ func dedup(vertices []models.Vertice) []models.Vertice {
 	for _, vert := range vertices {
 		dup := false
 		for _, dedupedVert := range dedupedVerts {
-			if internal.IsSameVertice(vert, dedupedVert, tolerance) {
+			if models.IsSameVertice(vert, dedupedVert, tolerance) {
 				dup = true
 				break
 			}
@@ -74,7 +73,7 @@ func (e *HexagonEngine) BuildAdjacentVerticesMap(vertices []models.Vertice) map[
 // returns ture if the v1 and v2 are adjacent to each other
 func (e *HexagonEngine) isAdjacentVertice(v1 models.Vertice, v2 models.Vertice) bool {
 	tolerance := 1.0
-	height := internal.HeightOfEqualateralTriangle(e.HexSideSize)
+	height := mathhelper.HeightOfEqualateralTriangle(e.HexSideSize)
 
 	// check if v2 is top  of v1
 	if withinTolerance(v1.X, v2.X, tolerance) && withinTolerance(v1.Y, v2.Y+e.HexSideSize, tolerance) {

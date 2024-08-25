@@ -3,7 +3,7 @@ package builders
 import (
 	"gocatan/board/models"
 	"gocatan/config"
-	mathhelper "gocatan/internal"
+	mathhelper "gocatan/internal/math"
 	"math/rand"
 )
 
