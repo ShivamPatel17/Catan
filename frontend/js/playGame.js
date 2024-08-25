@@ -28,6 +28,7 @@ export class playGame extends Phaser.Scene {
     this.input.keyboard.on("keydown-SPACE", this.rollDie, this);
     this.loadhex();
     this.loadVertices();
+    this.loadEdges();
   }
 
   async rollDie() {
@@ -104,6 +105,22 @@ export class playGame extends Phaser.Scene {
       }
     } catch (error) {
       console.log("Error loading vertices");
+    }
+  }
+
+  async loadEdges() {
+    try {
+      const board = await fetchData(gameConfig.baseUrl + "/board");
+      let edges = board.edges;
+      console.log(edges);
+      for (let i = 0; i < edges.length; i++) {
+        let edge = edges[i];
+        let sprite = this.add.sprite(edge.x, edge.y, "sheep_hex");
+        sprite.setDisplaySize(30, 30);
+        sprite.setDepth(2);
+      }
+    } catch (error) {
+      console.log("Error loading edges");
     }
   }
 }

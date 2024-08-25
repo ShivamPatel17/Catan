@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
-	builders "gocatan/board/builders"
+	builders "gocatan/board/builders/hexagon"
 	"gocatan/board/models"
 	"gocatan/config"
 	"net/http"
@@ -27,11 +27,13 @@ func buildBoard(_ context.Context, cfg config.Config) models.GameBoard {
 	concreteHexTiles, _ := engine.BuildHexagons(&regularMap)
 	vertices := engine.BuildVertices(concreteHexTiles)
 	adjVerticies := engine.BuildAdjacentVerticesMap(vertices)
+	edges := engine.BuildEdges(concreteHexTiles)
 
 	gb := models.GameBoard{
 		Tiles:             concreteHexTiles,
 		Vertices:          vertices,
 		AdjacentVerticies: adjVerticies,
+		Edges:             edges,
 	}
 	return gb
 }
