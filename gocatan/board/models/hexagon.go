@@ -32,13 +32,13 @@ type RelativeHexagonTile struct {
 
 type ConcreteHexagonTile struct {
 	Id       int64
-	X        int
-	Y        int
+	X        float64
+	Y        float64
 	Resource Resource
 }
 
 type Vertice struct {
-	Id int
-	X  int
-	Y  int
+	Id int64
+	X  float64
+	Y  float64
 }

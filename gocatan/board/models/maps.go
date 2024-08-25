@@ -1,7 +1,7 @@
 package models
 
 func RegularBoard() RelativeHexagonTile {
-	startingHexX, startingHexY := 500, 450
+	startingHexX, startingHexY := 500.0, 450.0
 	// can use this to pass configuation from the client in the future
 	return RelativeHexagonTile{
 		AdjacentTiles: []DirectionalHexagonTile{
@@ -105,7 +105,7 @@ func RegularBoard() RelativeHexagonTile {
 
 }
 func SingleHex() RelativeHexagonTile {
-	startingHexX, startingHexY := 500, 450
+	startingHexX, startingHexY := 500.0, 450.0
 	// can use this to pass configuation from the client in the future
 	return RelativeHexagonTile{
 		Concrete: &ConcreteHexagonTile{

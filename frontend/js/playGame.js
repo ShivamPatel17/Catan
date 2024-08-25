@@ -54,7 +54,6 @@ export class playGame extends Phaser.Scene {
         let sprite;
         switch (resource) {
           case "sheep":
-            console.log("adding sheep");
             sprite = this.add.sprite(x, y, "sheep_hex");
             break;
           case "wheat":
@@ -99,7 +98,6 @@ export class playGame extends Phaser.Scene {
       let vertices = board.Vertices;
       for (let i = 0; i < vertices.length; i++) {
         let vertice = vertices[i];
-        console.log(vertice);
         let sprite = this.add.sprite(vertice.X, vertice.Y, "brick_hex");
         sprite.setDisplaySize(30, 30);
         sprite.setDepth(2);

@@ -3,14 +3,14 @@ package builders
 import (
 	"gocatan/board/models"
 	"gocatan/config"
-	"math"
+	mathhelper "gocatan/internal"
 	"math/rand"
 )
 
 type HexagonEngine struct {
-	HexSideSize    float32
-	HexTotalWidth  float32
-	HexTotalHeight float32
+	HexSideSize    float64
+	HexTotalWidth  float64
+	HexTotalHeight float64
 }
 
 func NewHexagonEngine(cfg config.Config) HexagonEngine {
@@ -45,33 +45,33 @@ func (e *HexagonEngine) buildRelativeHexTiles(tiles *[]models.DirectionalHexagon
 		switch directionalTile.Direction {
 		case models.TopRight:
 			ConcreteTile = models.ConcreteHexagonTile{
-				X: relativeTo.X + int(math.Sqrt(3)*float64(e.HexSideSize)/2.0),
-				Y: relativeTo.Y - int((3*e.HexSideSize)/2.0),
+				X: relativeTo.X + mathhelper.HeightOfEqualateralTriangle(e.HexSideSize),
+				Y: relativeTo.Y - ((3 * e.HexSideSize) / 2.0),
 			}
 		case models.TopLeft:
 			ConcreteTile = models.ConcreteHexagonTile{
-				X: relativeTo.X - int(math.Sqrt(3)*float64(e.HexSideSize)/2.0),
-				Y: relativeTo.Y - int((3*e.HexSideSize)/2.0),
+				X: relativeTo.X - mathhelper.HeightOfEqualateralTriangle(e.HexSideSize),
+				Y: relativeTo.Y - ((3 * e.HexSideSize) / 2.0),
 			}
 		case models.MiddleRight:
 			ConcreteTile = models.ConcreteHexagonTile{
-				X: relativeTo.X + int(e.HexTotalWidth),
+				X: relativeTo.X + (e.HexTotalWidth),
 				Y: relativeTo.Y,
 			}
 		case models.MiddleLeft:
 			ConcreteTile = models.ConcreteHexagonTile{
-				X: relativeTo.X - int(e.HexTotalWidth),
+				X: relativeTo.X - (e.HexTotalWidth),
 				Y: relativeTo.Y,
 			}
 		case models.BottomRight:
 			ConcreteTile = models.ConcreteHexagonTile{
-				X: relativeTo.X + int(math.Sqrt(3)*float64(e.HexSideSize)/2.0),
-				Y: relativeTo.Y + int((3*e.HexSideSize)/2.0),
+				X: relativeTo.X + mathhelper.HeightOfEqualateralTriangle(e.HexSideSize),
+				Y: relativeTo.Y + ((3 * e.HexSideSize) / 2.0),
 			}
 		case models.BottomLeft:
 			ConcreteTile = models.ConcreteHexagonTile{
-				X: relativeTo.X - int(math.Sqrt(3)*float64(e.HexSideSize)/2.0),
-				Y: relativeTo.Y + int((3*e.HexSideSize)/2.0),
+				X: relativeTo.X - mathhelper.HeightOfEqualateralTriangle(e.HexSideSize),
+				Y: relativeTo.Y + ((3 * e.HexSideSize) / 2.0),
 			}
 		}
 

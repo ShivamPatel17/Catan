@@ -2,63 +2,81 @@ package builders
 
 import (
 	models "gocatan/board/models"
-	"math"
+	"gocatan/internal"
+	mathhelper "gocatan/internal"
 )
 
 func (e *HexagonEngine) BuildVertices(concreteTiles []models.ConcreteHexagonTile) []models.Vertice {
+	allVertices := e.buildAllVertices(concreteTiles)
+	dedupedVertices := dedup(allVertices)
+	return dedupedVertices
+}
+
+func (e *HexagonEngine) buildAllVertices(concreteTiles []models.ConcreteHexagonTile) []models.Vertice {
 	vertices := make([]models.Vertice, 0)
 	for _, concreteTile := range concreteTiles {
-		// TODO use a real for loop lol
-		arr := []int{1, 2, 3, 4, 5, 6}
-		for range arr {
-			vertices = append(vertices, models.Vertice{
-				X: 0,
-				Y: 0,
-			})
-			x, y := concreteTile.X, concreteTile.Y
-			// top vertice
-			vertices = append(vertices,
-				models.Vertice{
-					X: x,
-					Y: y - (int(e.HexSideSize)),
-				},
-			)
-			// top right
-			vertices = append(vertices,
-				models.Vertice{
-					X: x + int((math.Sqrt(3)/2.0)*float64(e.HexSideSize)),
-					Y: y - (int(e.HexSideSize) / 2),
-				},
-			)
-			// top left
-			vertices = append(vertices,
-				models.Vertice{
-					X: x - int((math.Sqrt(3)/2.0)*float64(e.HexSideSize)),
-					Y: y - (int(e.HexSideSize) / 2),
-				},
-			)
-			// bottom left
-			vertices = append(vertices,
-				models.Vertice{
-					X: x - int((math.Sqrt(3)/2.0)*float64(e.HexSideSize)),
-					Y: y + (int(e.HexSideSize) / 2),
-				},
-			)
-			// bottom right
-			vertices = append(vertices,
-				models.Vertice{
-					X: x + int((math.Sqrt(3)/2.0)*float64(e.HexSideSize)),
-					Y: y + (int(e.HexSideSize) / 2),
-				},
-			)
-			// bottom
-			vertices = append(vertices,
-				models.Vertice{
-					X: x,
-					Y: y + (int(e.HexSideSize)),
-				},
-			)
-		}
+
+		x, y := concreteTile.X, concreteTile.Y
+		// top vertice
+		vertices = append(vertices,
+			models.Vertice{
+				X: x,
+				Y: y - (e.HexSideSize),
+			},
+		)
+		// top right
+		vertices = append(vertices,
+			models.Vertice{
+				X: x + mathhelper.HeightOfEqualateralTriangle(e.HexSideSize),
+				Y: y - (e.HexSideSize / 2),
+			},
+		)
+		// top left
+		vertices = append(vertices,
+			models.Vertice{
+				X: x - mathhelper.HeightOfEqualateralTriangle(e.HexSideSize),
+				Y: y - (e.HexSideSize / 2),
+			},
+		)
+		// bottom left
+		vertices = append(vertices,
+			models.Vertice{
+				X: x - mathhelper.HeightOfEqualateralTriangle(e.HexSideSize),
+				Y: y + (e.HexSideSize / 2),
+			},
+		)
+		// bottom right
+		vertices = append(vertices,
+			models.Vertice{
+				X: x + mathhelper.HeightOfEqualateralTriangle(e.HexSideSize),
+				Y: y + (e.HexSideSize / 2),
+			},
+		)
+		// bottom
+		vertices = append(vertices,
+			models.Vertice{
+				X: x,
+				Y: y + e.HexSideSize,
+			},
+		)
 	}
 	return vertices
+}
+
+func dedup(vertices []models.Vertice) []models.Vertice {
+	tolerance := 1.0
+	dedupedVerts := make([]models.Vertice, 0)
+	for _, vert := range vertices {
+		dup := false
+		for _, dedupedVert := range dedupedVerts {
+			if internal.IsSameVertice(vert, dedupedVert, tolerance) {
+				dup = true
+				break
+			}
+		}
+		if !dup {
+			dedupedVerts = append(dedupedVerts, vert)
+		}
+	}
+	return dedupedVerts
 }
