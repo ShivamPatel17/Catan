@@ -25,7 +25,7 @@ func buildBoard(_ context.Context, cfg config.Config) models.GameBoard {
 	regularMap := models.RegularBoard()
 
 	concreteHexTiles, _ := engine.BuildHexagons(&regularMap)
-	vertices := builders.BuildVertices(concreteHexTiles)
+	vertices := engine.BuildVertices(concreteHexTiles)
 
 	gb := models.GameBoard{
 		Tiles:    concreteHexTiles,

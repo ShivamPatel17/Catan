@@ -104,5 +104,17 @@ func RegularBoard() RelativeHexagonTile {
 	}
 
 }
+func SingleHex() RelativeHexagonTile {
+	startingHexX, startingHexY := 500, 450
+	// can use this to pass configuation from the client in the future
+	return RelativeHexagonTile{
+		Concrete: &ConcreteHexagonTile{
+			X:        startingHexX,
+			Y:        startingHexY,
+			Resource: Sheep,
+		},
+	}
+
+}
 
 // can use this to pass configuation from the client in the future
