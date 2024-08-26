@@ -2,13 +2,6 @@
 import { PlayGame } from "./playGame.js";
 import { fetchData } from "./fetchData.js";
 
-// Define the base scale
-const hexagonImageScale = 0.3;
-
-// Base dimensions
-const hexagonImageHeight = 508;
-const hexagonImageWidth = 440;
-
 const baseUrl = "http://localhost:3000";
 
 // Export game options
