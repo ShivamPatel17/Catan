@@ -70,8 +70,15 @@ func RegularBoard() RelativeHexagonTile {
 							RelativeHexTile: RelativeHexagonTile{},
 						},
 						{
-							Direction:       BottomRight,
-							RelativeHexTile: RelativeHexagonTile{},
+							Direction: BottomRight,
+							RelativeHexTile: RelativeHexagonTile{
+								AdjacentTiles: []DirectionalHexagonTile{
+									{
+										Direction:       MiddleRight,
+										RelativeHexTile: RelativeHexagonTile{},
+									},
+								},
+							},
 						},
 						{
 							Direction:       BottomLeft,

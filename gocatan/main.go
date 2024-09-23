@@ -1,13 +1,24 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
 	"gocatan/api"
 	"gocatan/board"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"time"
 
 	"golang.org/x/net/websocket"
 )
+
+// WSMessage represents a message structure for WebSocket communication
+type WSMessage struct {
+	MessageType string `json:"messageType"`
+	Content     string `json:"content,omitempty"`
+}
 
 // WebSocket handler function
 func wsHandler(ws *websocket.Conn) {
@@ -25,8 +36,35 @@ func wsHandler(ws *websocket.Conn) {
 
 		log.Printf("Received message: %s\n", message)
 
-		// Echo the message back to the client
-		err = websocket.Message.Send(ws, message)
+		// Decode the received message
+		var receivedMsg WSMessage
+		err = json.Unmarshal([]byte(message), &receivedMsg)
+		if err != nil {
+			log.Println("Error unmarshalling message:", err)
+			continue
+		}
+
+		// Handle message types
+		switch receivedMsg.MessageType {
+		case "rollDice":
+			// Perform dice roll or relevant game action here
+			log.Println("Roll dice action received")
+		default:
+			log.Println("Unknown message type:", receivedMsg.MessageType)
+		}
+
+		// Create response message
+		responseMsg := WSMessage{MessageType: "gameState"}
+
+		// Marshal the response into JSON
+		msg, err := json.Marshal(responseMsg)
+		if err != nil {
+			log.Println("Error marshalling message:", err)
+			continue
+		}
+
+		// Send the message back to the client
+		err = websocket.Message.Send(ws, msg)
 		if err != nil {
 			log.Println("Error sending message:", err)
 			break
@@ -76,10 +114,34 @@ func main() {
 	// Wrap the ServeMux with the CORS middleware
 	handler := enableCors(mux)
 
-	// Start the server
-	log.Print("Listening on :3000...")
-	err := http.ListenAndServe(":3000", handler)
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+	// Create an HTTP server with timeout settings and graceful shutdown support
+	server := &http.Server{
+		Addr:    ":3000",
+		Handler: handler,
 	}
+
+	// Start the server in a goroutine
+	go func() {
+		log.Println("Server is listening on :3000...")
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("ListenAndServe: %v", err)
+		}
+	}()
+
+	// Graceful shutdown setup
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt)
+
+	// Block until we receive a signal
+	<-stop
+
+	// Gracefully shut down the server, waiting 5 seconds for active connections to close
+	log.Println("Shutting down server...")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		log.Fatalf("Server forced to shutdown: %v", err)
+	}
+
+	log.Println("Server exiting")
 }

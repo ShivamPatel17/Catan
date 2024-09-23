@@ -30,15 +30,35 @@ export class PlayGame extends Phaser.Scene {
     // Handle the connection opening
     this.socket.onopen = () => {
       console.log("WebSocket connection established");
-
-      // Optionally send an initial message to the server
-      this.socket.send(JSON.stringify({ type: "join", data: {} }));
     };
 
     // Handle incoming messages from the server
     this.socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      this.handleServerMessage(message);
+      console.log("MESSAGE RECEIVED!");
+      console.log(event); // Log the entire event
+
+      // Check if the message is a Blob
+      if (event.data instanceof Blob) {
+        event.data.text().then((text) => {
+          console.log("Raw message data:", text); // Log the raw message data as a string
+          try {
+            const message = JSON.parse(text); // Parse the string as JSON
+            console.log("Parsed JSON message:", message); // Log the parsed JSON
+            this.handleServerMessage(message); // Call your handler with the parsed message
+          } catch (error) {
+            console.error("Error parsing JSON:", error);
+          }
+        });
+      } else {
+        // If the message is not a Blob, handle it as a string (if needed)
+        try {
+          const message = JSON.parse(event.data); // Parse it directly as JSON
+          console.log("Parsed JSON message:", message);
+          this.handleServerMessage(message);
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
+        }
+      }
     };
 
     // Handle connection closure
@@ -53,9 +73,10 @@ export class PlayGame extends Phaser.Scene {
   }
 
   handleServerMessage(message) {
-    switch (message.type) {
+    console.log(message);
+    switch (message.messageType) {
       case "gameState":
-        this.updateGameState(message.data);
+        this.updateGameState();
         break;
       case "actionResult":
         this.processActionResult(message.data);
@@ -114,30 +135,64 @@ export class PlayGame extends Phaser.Scene {
       sprite.setDisplaySize(config.HexWidth, config.HexHeight);
       sprite.setInteractive();
       sprite.setDepth(1);
-      sprite.on("pointerover", function () {
-        // https://newdocs.phaser.io/docs/3.80.0/Phaser.GameObjects.GameObject#On
-        onHover(sprite);
-      });
-      // Add the 'pointerout' event listener (optional)
-      sprite.on("pointerout", function () {
-        onHoverOut(sprite);
-      });
+      setOnHover(sprite);
     }
   }
 
   loadVertices() {
     let vertices = this.gameState.vertices;
+
+    if (!vertices || !Array.isArray(vertices)) {
+      console.error("Vertices data is undefined or not an array");
+      return;
+    }
+
+    console.log(vertices);
+
     for (let i = 0; i < vertices.length; i++) {
       let vertice = vertices[i];
+
+      // Check if vertice contains the necessary properties (x, y, id)
+      if (
+        typeof vertice.x !== "number" ||
+        typeof vertice.y !== "number" ||
+        typeof vertice.id !== "string"
+      ) {
+        console.error(
+          `Vertice at index ${i} is missing 'x', 'y', or 'id' properties`
+        );
+        continue;
+      }
+
       let sprite = this.add.sprite(vertice.x, vertice.y, "brick_hex");
+
       sprite.setDisplaySize(30, 30);
+      sprite.setInteractive();
       sprite.setDepth(2);
+
+      // Set hover functionality
+      setOnHover(sprite);
+
+      // Add click functionality that sends WebSocket message with vertice id
+      sprite.on("pointerdown", () => {
+        const message = {
+          action: "vertexClicked",
+          id: vertice.id,
+        };
+
+        // Assuming you have a WebSocket connection stored in this.socket
+        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+          this.socket.send(JSON.stringify(message));
+          console.log("Sent message:", message);
+        } else {
+          console.error("WebSocket connection is not open");
+        }
+      });
     }
   }
 
   loadEdges() {
     let edges = this.gameState.edges;
-    console.log(edges);
     for (let i = 0; i < edges.length; i++) {
       let edge = edges[i];
       let sprite = this.add.sprite(edge.x, edge.y, "sheep_hex");
@@ -151,12 +206,47 @@ export class PlayGame extends Phaser.Scene {
     // if new game state is the same as backend, only move the sprites that are necessary to the new position
     // if the game state is different, rerender everything
   }
+
+  handleServerMessage(message) {
+    console.log(message);
+    switch (message.messageType) {
+      case "gameState":
+        this.updateGameState(message.data); // Update the game state with new data
+        break;
+      case "actionResult":
+        this.processActionResult(message.data);
+        break;
+      // Handle other message types...
+      default:
+        console.warn("Unknown message type:", message.messageType);
+    }
+  }
+
+  updateGameState() {
+    // Update the local game state
+
+    // Clear the current game objects (e.g., tiles, vertices, edges)
+    this.clearGameObjects();
+
+    // Re-render the game objects with the new state
+    this.loadhex();
+    this.loadVertices();
+    this.loadEdges();
+  }
+
+  clearGameObjects() {
+    // Remove all existing sprites (e.g., hexes, vertices, edges)
+    this.children.removeAll(); // This removes all game objects from the scene
+  }
 }
 
-function onHover(sprite) {
-  sprite.setTint(0xff0000); // Change the color of the sprite on hover
-}
-
-function onHoverOut(sprite) {
-  sprite.clearTint(); // Revert the color of the sprite
+function setOnHover(sprite) {
+  sprite.on("pointerover", function () {
+    // https://newdocs.phaser.io/docs/3.80.0/Phaser.GameObjects.GameObject#On
+    sprite.setTint(0xff0000); // Change the color of the sprite on hover
+  });
+  // Add the 'pointerout' event listener (optional)
+  sprite.on("pointerout", function () {
+    sprite.clearTint();
+  });
 }

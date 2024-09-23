@@ -10,7 +10,15 @@ type Vertice struct {
 	Id uuid.UUID `json:"id"`
 	X  float64   `json:"x"`
 	Y  float64   `json:"y"`
+	Building
 }
+
+type Building int
+
+const (
+	Settlement Building = 1
+	City       Building = 2
+)
 
 func NewVertice(x float64, y float64) Vertice {
 	uuid, _ := uuid.NewUUID()
