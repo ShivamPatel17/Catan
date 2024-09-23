@@ -2,6 +2,7 @@ import { fetchData } from "./fetchData.js";
 import { gameConfig } from "./gameConfig.js";
 import { config } from "./gameConfig.js";
 import { loadAssets } from "./loadAssets.js";
+
 export class PlayGame extends Phaser.Scene {
   constructor() {
     super({ key: "PlayGame" });
@@ -76,14 +77,14 @@ export class PlayGame extends Phaser.Scene {
     console.log(message);
     switch (message.messageType) {
       case "gameState":
-        this.updateGameState();
+        this.updateGameState(message.data); // Use the new state from the message
         break;
       case "actionResult":
         this.processActionResult(message.data);
         break;
       // Handle other message types...
       default:
-        console.warn("Unknown message type:", message.type);
+        console.warn("Unknown message type:", message.messageType);
     }
   }
 
@@ -108,6 +109,12 @@ export class PlayGame extends Phaser.Scene {
   }
 
   loadhex() {
+    // Ensure gameState and its tiles property exist before attempting to use them
+    if (!this.gameState || !this.gameState.tiles) {
+      console.error("Game state or tiles are undefined");
+      return;
+    }
+
     let hexagons = this.gameState.tiles;
     for (let i = 0; i < hexagons.length; i++) {
       let x = hexagons[i].x;
@@ -140,14 +147,13 @@ export class PlayGame extends Phaser.Scene {
   }
 
   loadVertices() {
-    let vertices = this.gameState.vertices;
-
-    if (!vertices || !Array.isArray(vertices)) {
+    // Ensure gameState and its vertices property exist before attempting to use them
+    if (!this.gameState || !this.gameState.vertices) {
       console.error("Vertices data is undefined or not an array");
       return;
     }
 
-    console.log(vertices);
+    let vertices = this.gameState.vertices;
 
     for (let i = 0; i < vertices.length; i++) {
       let vertice = vertices[i];
@@ -192,6 +198,11 @@ export class PlayGame extends Phaser.Scene {
   }
 
   loadEdges() {
+    if (!this.gameState || !this.gameState.edges) {
+      console.error("Edges data is undefined");
+      return;
+    }
+
     let edges = this.gameState.edges;
     for (let i = 0; i < edges.length; i++) {
       let edge = edges[i];
@@ -201,29 +212,18 @@ export class PlayGame extends Phaser.Scene {
     }
   }
 
-  update() {
-    // listen to backend
-    // if new game state is the same as backend, only move the sprites that are necessary to the new position
-    // if the game state is different, rerender everything
-  }
-
-  handleServerMessage(message) {
-    console.log(message);
-    switch (message.messageType) {
-      case "gameState":
-        this.updateGameState(message.data); // Update the game state with new data
-        break;
-      case "actionResult":
-        this.processActionResult(message.data);
-        break;
-      // Handle other message types...
-      default:
-        console.warn("Unknown message type:", message.messageType);
+  updateGameState(newState) {
+    // Ensure newState exists and has the expected properties before updating game state
+    console.log(newState);
+    if (!newState || !newState.tiles || !newState.vertices || !newState.edges) {
+      console.error("Received invalid game state from server");
+      return;
     }
-  }
 
-  updateGameState() {
-    // Update the local game state
+    // Update the local game state with the new state
+    this.gameState = newState;
+    console.log("HERE!!!");
+    console.log(this.gameState);
 
     // Clear the current game objects (e.g., tiles, vertices, edges)
     this.clearGameObjects();
@@ -242,11 +242,9 @@ export class PlayGame extends Phaser.Scene {
 
 function setOnHover(sprite) {
   sprite.on("pointerover", function () {
-    // https://newdocs.phaser.io/docs/3.80.0/Phaser.GameObjects.GameObject#On
     sprite.setTint(0xff0000); // Change the color of the sprite on hover
   });
-  // Add the 'pointerout' event listener (optional)
   sprite.on("pointerout", function () {
-    sprite.clearTint();
+    sprite.clearTint(); // Remove the tint on pointer out
   });
 }

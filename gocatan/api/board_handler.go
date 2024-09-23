@@ -12,13 +12,13 @@ import (
 func BoardHandler(w http.ResponseWriter, r *http.Request) {
 	cfg := config.NewConfig()
 	ctx := context.Background()
-	gb := buildBoard(ctx, cfg)
+	gb := BuildBoard(ctx, cfg)
 	resp, _ := json.Marshal(gb)
 
 	w.Write(resp)
 }
 
-func buildBoard(_ context.Context, cfg config.Config) models.GameBoard {
+func BuildBoard(_ context.Context, cfg config.Config) models.GameBoard {
 	// can use this to pass configuation from the client in the future
 	engine := builders.NewHexagonEngine(cfg)
 

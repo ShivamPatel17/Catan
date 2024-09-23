@@ -2,75 +2,18 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"gocatan/api"
 	"gocatan/board"
+	"gocatan/board/models"
+	"gocatan/config"
 	"log"
 	"net/http"
-	"os"
-	"os/signal"
-	"time"
+	"sync"
 
 	"golang.org/x/net/websocket"
 )
 
-// WSMessage represents a message structure for WebSocket communication
-type WSMessage struct {
-	MessageType string `json:"messageType"`
-	Content     string `json:"content,omitempty"`
-}
-
 // WebSocket handler function
-func wsHandler(ws *websocket.Conn) {
-	defer ws.Close()
-	log.Println("New WebSocket connection established")
-
-	for {
-		var message string
-		// Receive a message from the client
-		err := websocket.Message.Receive(ws, &message)
-		if err != nil {
-			log.Println("Error receiving message:", err)
-			break
-		}
-
-		log.Printf("Received message: %s\n", message)
-
-		// Decode the received message
-		var receivedMsg WSMessage
-		err = json.Unmarshal([]byte(message), &receivedMsg)
-		if err != nil {
-			log.Println("Error unmarshalling message:", err)
-			continue
-		}
-
-		// Handle message types
-		switch receivedMsg.MessageType {
-		case "rollDice":
-			// Perform dice roll or relevant game action here
-			log.Println("Roll dice action received")
-		default:
-			log.Println("Unknown message type:", receivedMsg.MessageType)
-		}
-
-		// Create response message
-		responseMsg := WSMessage{MessageType: "gameState"}
-
-		// Marshal the response into JSON
-		msg, err := json.Marshal(responseMsg)
-		if err != nil {
-			log.Println("Error marshalling message:", err)
-			continue
-		}
-
-		// Send the message back to the client
-		err = websocket.Message.Send(ws, msg)
-		if err != nil {
-			log.Println("Error sending message:", err)
-			break
-		}
-	}
-}
 
 // CORS middleware function
 func enableCors(next http.Handler) http.Handler {
@@ -114,34 +57,109 @@ func main() {
 	// Wrap the ServeMux with the CORS middleware
 	handler := enableCors(mux)
 
-	// Create an HTTP server with timeout settings and graceful shutdown support
-	server := &http.Server{
-		Addr:    ":3000",
-		Handler: handler,
-	}
+	cfg := config.NewConfig()
+	ctx := context.Background()
+	gameState = api.BuildBoard(ctx, cfg)
 
-	// Start the server in a goroutine
-	go func() {
-		log.Println("Server is listening on :3000...")
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("ListenAndServe: %v", err)
+	// Start the server
+	log.Print("Listening on :3000...")
+	err := http.ListenAndServe(":3000", handler)
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
+}
+
+// Define the persistent game state structure
+var gameState models.GameBoard
+
+var clients = make(map[*websocket.Conn]bool) // Track all connected clients
+var stateMutex sync.Mutex                    // Mutex to handle concurrent access
+
+// WSMessage represents a WebSocket message
+type WSMessage struct {
+	MessageType string      `json:"messageType"`
+	Data        interface{} `json:"data,omitempty"`
+}
+
+// WebSocket handler function
+func wsHandler(ws *websocket.Conn) {
+	defer ws.Close()
+	clients[ws] = true // Add new client
+
+	// Send the current game state to the new client
+	sendGameState(ws)
+
+	for {
+		var message WSMessage
+		// Receive a message from the client
+		err := websocket.JSON.Receive(ws, &message)
+		if err != nil {
+			log.Println("Error receiving message:", err)
+			delete(clients, ws)
+			break
 		}
-	}()
 
-	// Graceful shutdown setup
-	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, os.Interrupt)
+		log.Printf("Received message: %v\n", message)
 
-	// Block until we receive a signal
-	<-stop
+		// Handle the incoming message based on the message type
+		switch message.MessageType {
+		case "gameStateRequest":
+			// Client requests the current game state
+			sendGameState(ws)
+		case "action":
+			// Example: Handle a player action, update the game state
+			handlePlayerAction(message)
+		case "vertexClicked":
+			deleteVertex(ws)
+		default:
+			log.Println("Unknown message type:", message.MessageType)
+		}
+	}
+}
 
-	// Gracefully shut down the server, waiting 5 seconds for active connections to close
-	log.Println("Shutting down server...")
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := server.Shutdown(ctx); err != nil {
-		log.Fatalf("Server forced to shutdown: %v", err)
+// Send the current game state to the client
+func sendGameState(ws *websocket.Conn) {
+	stateMutex.Lock()
+	defer stateMutex.Unlock()
+
+	msg := WSMessage{
+		MessageType: "gameState",
+		Data:        gameState,
 	}
 
-	log.Println("Server exiting")
+	err := websocket.JSON.Send(ws, msg)
+	if err != nil {
+		log.Println("Error sending game state:", err)
+	}
+}
+
+// Example function to handle player actions
+func handlePlayerAction(message WSMessage) {
+	stateMutex.Lock()
+	defer stateMutex.Unlock()
+
+	// Parse the message and update the game state
+	// For example, modifying the vertices or edges based on player action
+	log.Printf("Handling player action: %v\n", message)
+
+	// After updating the game state, broadcast the updated state to all clients
+	broadcastGameState()
+}
+
+// Broadcast updated game state to all connected clients
+func broadcastGameState() {
+	stateMutex.Lock()
+	defer stateMutex.Unlock()
+
+	for client := range clients {
+		err := websocket.JSON.Send(client, WSMessage{
+			MessageType: "gameState",
+			Data:        gameState,
+		})
+		if err != nil {
+			log.Println("Error sending game state to client:", err)
+			client.Close()
+			delete(clients, client) // Remove disconnected clients
+		}
+	}
 }
