@@ -16,8 +16,9 @@ export class PlayGame extends Phaser.Scene {
   async create() {
     // Fetch the initial game state from the backend
     this.gameState = await this.fetchGameState();
+    console.log(this.gameState);
     this.setupWebSocket();
-    this.die = this.add.sprite(700, 550, "redDie").setInteractive();
+    this.die = this.add.sprite(400, 350, "redDie").setInteractive();
     this.input.keyboard.on("keydown-SPACE", this.rollDie, this);
     this.loadhex();
     this.loadVertices();
@@ -75,6 +76,7 @@ export class PlayGame extends Phaser.Scene {
 
   handleServerMessage(message) {
     console.log(message);
+    console.log("handling server message?!?");
     switch (message.messageType) {
       case "gameState":
         this.updateGameState(message.data); // Use the new state from the message
@@ -109,6 +111,7 @@ export class PlayGame extends Phaser.Scene {
   }
 
   loadhex() {
+    console.log("fetching load hex");
     // Ensure gameState and its tiles property exist before attempting to use them
     if (!this.gameState || !this.gameState.tiles) {
       console.error("Game state or tiles are undefined");
@@ -116,6 +119,7 @@ export class PlayGame extends Phaser.Scene {
     }
 
     let hexagons = this.gameState.tiles;
+    console.log(hexagons);
     for (let i = 0; i < hexagons.length; i++) {
       let x = hexagons[i].x;
       let y = hexagons[i].y;
@@ -165,7 +169,7 @@ export class PlayGame extends Phaser.Scene {
         typeof vertice.id !== "string"
       ) {
         console.error(
-          `Vertice at index ${i} is missing 'x', 'y', or 'id' properties`
+          `Vertice at index ${i} is missing 'x', 'y', or 'id' properties`,
         );
         continue;
       }
@@ -182,8 +186,8 @@ export class PlayGame extends Phaser.Scene {
       // Add click functionality that sends WebSocket message with vertice id
       sprite.on("pointerdown", () => {
         const message = {
-          action: "vertexClicked",
-          id: vertice.id,
+          MessageType: "vertexClicked",
+          Data: vertice.id,
         };
 
         // Assuming you have a WebSocket connection stored in this.socket
@@ -220,13 +224,15 @@ export class PlayGame extends Phaser.Scene {
       return;
     }
 
+    console.log(newState);
     // Update the local game state with the new state
     this.gameState = newState;
     console.log("HERE!!!");
     console.log(this.gameState);
 
-    // Clear the current game objects (e.g., tiles, vertices, edges)
-    this.clearGameObjects();
+    // commenting because I think this does nothing
+    //// Clear the current game objects (e.g., tiles, vertices, edges)
+    //this.clearGameObjects();
 
     // Re-render the game objects with the new state
     this.loadhex();
@@ -248,3 +254,4 @@ function setOnHover(sprite) {
     sprite.clearTint(); // Remove the tint on pointer out
   });
 }
+

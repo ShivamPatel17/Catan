@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"gocatan/api"
 	"gocatan/board"
 	"gocatan/board/models"
@@ -162,4 +163,8 @@ func broadcastGameState() {
 			delete(clients, client) // Remove disconnected clients
 		}
 	}
+}
+
+func deleteVertex(ws any) {
+	fmt.Printf("in the deleteVertex func with ws: %s", ws)
 }

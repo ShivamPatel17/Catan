@@ -4,6 +4,7 @@ export function loadAssets(scene) {
   loadDiceSpritesheet(scene);
   loadHexagonImages(scene);
 }
+
 function loadDiceSpritesheet(scene) {
   scene.load.spritesheet(
     "redDie",
@@ -11,7 +12,7 @@ function loadDiceSpritesheet(scene) {
     {
       frameWidth: gameOptions.diceWidth,
       frameHeight: gameOptions.diceHeight,
-    }
+    },
   );
 }
 
@@ -21,3 +22,4 @@ function loadHexagonImages(scene) {
     scene.load.image(`${hex}_hex`, `assets/board/hexagon/${hex}.png`);
   });
 }
+

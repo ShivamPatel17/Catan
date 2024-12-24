@@ -12,6 +12,7 @@ export let gameConfigGo = null; // Declare and export gameConfigGo
     // console.log(gameConfigGo);
 
     if (gameConfigGo) {
+      console.log("starting game");
       let game = new Phaser.Game(gameConfig);
       window.focus();
     } else {
@@ -21,3 +22,4 @@ export let gameConfigGo = null; // Declare and export gameConfigGo
     console.error("Error initializing the game: ", error);
   }
 })();
+

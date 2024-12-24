@@ -38,3 +38,4 @@ export let config = null; // Declare and export gameConfigGo
     console.error("Error initializing the game: ", error);
   }
 })();
+

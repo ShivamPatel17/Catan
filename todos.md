@@ -19,3 +19,13 @@
 - add variations on all the maps
   - maybe some things cost different amounts?
 - introduce some kind of battleing system like AOE? turn based strategy
+- allow clients to write their algorithms to compete against one another..
+  - i really love this Ideas. Let's just do one small step at a time
+  - set up API to allow clients to set up
+  - put the website up on the public
+
+## nvim stuff
+
+- get a javascript LSP
+- get teh matcher to stop bugging on on asteriks
+
