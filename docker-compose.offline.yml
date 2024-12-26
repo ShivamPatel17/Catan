@@ -1,0 +1,7 @@
+version: '3.8'
+services:
+  app:
+    image: catan-app:latest
+
+  web:
+    image: catan-web:latest

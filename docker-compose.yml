@@ -1,26 +1,27 @@
 version: '3.8'
 services:
   app:
-    image: catan-app
-    working_dir: /app
-    build: 
-      context: ./gocatan
-      dockerfile: Dockerfile
+    image: catan-app:latest  # Ensure this matches the locally preloaded image
     container_name: catanapp
+    working_dir: /app
     environment:
       - GO_ENV=development
     ports:
       - "3000:3000"
     volumes:
-    - ./gocatan:/app
+      - ./gocatan:/app
+    build:
+      context: ./gocatan
+      dockerfile: Dockerfile
+
   web:
-    build: 
+    image: catan-web:latest  # Ensure this matches the locally preloaded image
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # Prevent overwriting node_modules
+    command: ["yarn", "dev", "--host"]
+    build:
       context: ./frontend
       dockerfile: Dockerfile
-    ports:
-      - "8080:80"
-    volumes:
-      - ./frontend:/usr/share/nginx/html
-    depends_on:
-      - app
-

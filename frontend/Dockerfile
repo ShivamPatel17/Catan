@@ -1,11 +1,23 @@
-# Use Nginx official image from Docker Hub
-FROM nginx:alpine
+# Use a Node.js base image
+FROM node:23
 
-# Copy static content from public folder to the container
-COPY . /usr/share/nginx/html
+# Set the working directory
+WORKDIR /app
 
-# Expose port 80
-EXPOSE 80
+# Copy Yarn cache into the container
+COPY yarn_cache /usr/local/share/.cache/yarn
 
-# Start Nginx and keep it running in the foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Copy package.json and yarn.lock to leverage Docker cache
+COPY package.json yarn.lock ./
+
+# Install dependencies using Yarn in offline mode
+RUN yarn install --frozen-lockfile
+
+# Copy the rest of the application
+COPY . .
+
+# Expose the development server port
+EXPOSE 5173
+
+# Start the application
+CMD ["yarn", "dev", "--host"]

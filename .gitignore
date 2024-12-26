@@ -1,3 +1,5 @@
 gocatan/tmp/*
 
 frontend/node_modules/*
+
+*.tar

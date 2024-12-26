@@ -1,7 +1,13 @@
-# Makefile for managing a Dockerized Go application using Docker Compose
-
 # Docker Compose command
 DC=docker-compose
+
+# Image names and tags
+APP_IMAGE_NAME=catan-app
+APP_IMAGE_TAG=latest
+APP_IMAGE_FILE=$(APP_IMAGE_NAME)-$(APP_IMAGE_TAG).tar
+WEB_IMAGE_NAME=catan-web
+WEB_IMAGE_TAG=latest
+WEB_IMAGE_FILE=$(WEB_IMAGE_NAME)-$(WEB_IMAGE_TAG).tar
 
 # Start the application
 up:
@@ -19,8 +25,18 @@ clean:
 logs:
 	$(DC) logs -f
 
-# Utility command to access container shell
-shell:
-	docker exec -it catanapp /bin/sh
+# Save images
+save-images:
+	docker save $(APP_IMAGE_NAME):$(APP_IMAGE_TAG) > $(APP_IMAGE_FILE)
+	docker save $(WEB_IMAGE_NAME):$(WEB_IMAGE_TAG) > $(WEB_IMAGE_FILE)
 
-.PHONY: up down clean logs shell
+# Load images
+load-images:
+	docker load < $(APP_IMAGE_FILE)
+	docker load < $(WEB_IMAGE_FILE)
+
+# Run the services in offline mode
+offline:
+	$(DC) -f docker-compose.yml -f docker-compose.offline.yml up --pull never -d
+
+.PHONY: up down clean logs shell-app shell-web export-app-image export-web-image load-app-image load-web-image export-all-images load-all-images list-images

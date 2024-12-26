@@ -18,10 +18,10 @@ export let gameConfig = {
   type: Phaser.AUTO,
   backgroundColor: 0x4488aa,
   scale: {
-    mode: Phaser.Scale.EXPAND,
+    mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     parent: "thegame",
-    width: 1200,
+    width: 1400,
     height: 900,
   },
   scene: [PlayGame, MenuScene], // Reference to the playGame class
