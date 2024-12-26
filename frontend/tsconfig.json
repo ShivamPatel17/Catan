@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": ["DOM", "ES6"],
+    "types": ["phaser"],
+    "typeRoots": ["node_modules/@types"],
+    "strict": true
+  },
+  "include": ["src/**/*"]
+}
+

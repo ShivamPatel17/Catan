@@ -1,5 +1,6 @@
 // Import the playGame class from playGame.js
 import { PlayGame } from "./playGame.js";
+import { MenuScene } from "./menuscene.js";
 import { fetchData } from "./fetchData.js";
 
 const baseUrl = "http://localhost:3000";
@@ -22,7 +23,7 @@ export let gameConfig = {
     width: 1200,
     height: 900,
   },
-  scene: PlayGame, // Reference to the playGame class
+  scene: [PlayGame, MenuScene], // Reference to the playGame class
 };
 
 export let config = null; // Declare and export gameConfigGo

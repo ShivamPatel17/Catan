@@ -18,11 +18,12 @@ export class PlayGame extends Phaser.Scene {
     this.gameState = await this.fetchGameState();
     console.log(this.gameState);
     this.setupWebSocket();
-    this.die = this.add.sprite(400, 350, "redDie").setInteractive();
-    this.input.keyboard.on("keydown-SPACE", this.rollDie, this);
     this.loadhex();
     this.loadVertices();
     this.loadEdges();
+    this.die = this.add.sprite(1000, 800, "redDie").setInteractive();
+    this.input.keyboard.on("keydown-SPACE", this.rollDie, this);
+    this.die.on("pointerdown", () => this.scene.start("MenuScene")); // Start game on click
   }
 
   setupWebSocket() {
@@ -145,7 +146,6 @@ export class PlayGame extends Phaser.Scene {
       }
       sprite.setDisplaySize(config.HexWidth, config.HexHeight);
       sprite.setInteractive();
-      sprite.setDepth(1);
       setOnHover(sprite);
     }
   }

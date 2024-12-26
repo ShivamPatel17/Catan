@@ -1,5 +1,4 @@
 import { gameConfig } from "./gameConfig.js";
-import { PlayGame } from "./playGame.js";
 import { fetchData } from "./fetchData.js";
 
 export let gameConfigGo = null; // Declare and export gameConfigGo
