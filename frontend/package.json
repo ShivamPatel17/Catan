@@ -1,0 +1,17 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "install": "^0.13.0",
+    "phaser": "^3.87.0",
+    "vite": "^6.0.6"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

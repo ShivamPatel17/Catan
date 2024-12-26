@@ -1,5 +1,6 @@
 import { gameConfig } from "./gameConfig.js";
 import { fetchData } from "./fetchData.js";
+import Phaser from "phaser";
 
 export let gameConfigGo = null; // Declare and export gameConfigGo
 

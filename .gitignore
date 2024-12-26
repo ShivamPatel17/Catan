@@ -1,2 +1,4 @@
-/tmp/*
+tmp/*
 go/tmp/*
+
+frontend/node_modules/*
