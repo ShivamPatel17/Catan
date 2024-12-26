@@ -9,7 +9,6 @@ export let gameConfigGo = null; // Declare and export gameConfigGo
     // Fetch the game configuration
     const url = "http://localhost:3000/config";
     gameConfigGo = await fetchData(url); // Update the exported variable
-    // console.log(gameConfigGo);
 
     if (gameConfigGo) {
       console.log("starting game");

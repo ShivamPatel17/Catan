@@ -2,6 +2,7 @@ import { fetchData } from "./fetchData.js";
 import { gameConfig } from "./gameConfig.js";
 import { config } from "./gameConfig.js";
 import { loadAssets } from "./loadAssets.js";
+import Phaser from "phaser";
 
 export class PlayGame extends Phaser.Scene {
   constructor() {

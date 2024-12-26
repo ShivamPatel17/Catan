@@ -3,6 +3,7 @@ import { PlayGame } from "./playGame.js";
 import { MenuScene } from "./menuscene.js";
 import { fetchData } from "./fetchData.js";
 
+import Phaser from "phaser";
 const baseUrl = "http://localhost:3000";
 
 // Export game options
@@ -17,7 +18,7 @@ export let gameConfig = {
   type: Phaser.AUTO,
   backgroundColor: 0x4488aa,
   scale: {
-    mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.EXPAND,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     parent: "thegame",
     width: 1200,
