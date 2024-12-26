@@ -25,18 +25,15 @@ clean:
 logs:
 	$(DC) logs -f
 
-# Save images
+# Save images - run this to save your latest build "offline"
 save-images:
 	docker save $(APP_IMAGE_NAME):$(APP_IMAGE_TAG) > $(APP_IMAGE_FILE)
 	docker save $(WEB_IMAGE_NAME):$(WEB_IMAGE_TAG) > $(WEB_IMAGE_FILE)
 
-# Load images
-load-images:
+# Load images - run this when you're offline and want to load up the latest images load-images:
 	docker load < $(APP_IMAGE_FILE)
 	docker load < $(WEB_IMAGE_FILE)
 
-# Run the services in offline mode
+# Run the services in offline mode - make sure to load up images
 offline:
 	$(DC) -f docker-compose.yml -f docker-compose.offline.yml up --pull never -d
-
-.PHONY: up down clean logs shell-app shell-web export-app-image export-web-image load-app-image load-web-image export-all-images load-all-images list-images
