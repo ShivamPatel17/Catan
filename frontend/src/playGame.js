@@ -15,16 +15,23 @@ export class PlayGame extends Phaser.Scene {
   }
 
   async create() {
-    // Fetch the initial game state from the backend
-    this.gameState = await this.fetchGameState();
-    console.log(this.gameState);
     this.setupWebSocket();
-    this.loadhex();
-    this.loadVertices();
-    this.loadEdges();
+    // Fetch the initial game state from the backend
+    //this.gameState = await this.fetchGameState();
+    console.log(this.gameState);
+    this.socket.send(JSON.stringify("joining"));
+    this.drawBoard();
     this.die = this.add.sprite(1000, 800, "redDie").setInteractive();
     this.input.keyboard.on("keydown-SPACE", this.rollDie, this);
     this.die.on("pointerdown", () => this.scene.start("MenuScene")); // Start game on click
+  }
+
+  drawBoard() {
+    console.log("drawing board");
+    this.children.removeAll(true);
+    this.loadhex();
+    this.loadVertices();
+    this.loadEdges();
   }
 
   setupWebSocket() {
@@ -121,7 +128,6 @@ export class PlayGame extends Phaser.Scene {
     }
 
     let hexagons = this.gameState.tiles;
-    console.log(hexagons);
     for (let i = 0; i < hexagons.length; i++) {
       let x = hexagons[i].x;
       let y = hexagons[i].y;
@@ -160,9 +166,7 @@ export class PlayGame extends Phaser.Scene {
 
     let vertices = this.gameState.vertices;
 
-    for (let i = 0; i < vertices.length; i++) {
-      let vertice = vertices[i];
-
+    Object.entries(vertices).forEach(([uuid, vertice]) => {
       // Check if vertice contains the necessary properties (x, y, id)
       if (
         typeof vertice.x !== "number" ||
@@ -172,7 +176,7 @@ export class PlayGame extends Phaser.Scene {
         console.error(
           `Vertice at index ${i} is missing 'x', 'y', or 'id' properties`,
         );
-        continue;
+        return;
       }
 
       let sprite = this.add.sprite(vertice.x, vertice.y, "brick_hex");
@@ -201,7 +205,7 @@ export class PlayGame extends Phaser.Scene {
           console.error("WebSocket connection is not open");
         }
       });
-    }
+    });
   }
 
   loadEdges() {
@@ -233,19 +237,7 @@ export class PlayGame extends Phaser.Scene {
     console.log("HERE!!!");
     console.log(this.gameState);
 
-    // commenting because I think this does nothing
-    //// Clear the current game objects (e.g., tiles, vertices, edges)
-    //this.clearGameObjects();
-
-    // Re-render the game objects with the new state
-    this.loadhex();
-    this.loadVertices();
-    this.loadEdges();
-  }
-
-  clearGameObjects() {
-    // Remove all existing sprites (e.g., hexes, vertices, edges)
-    this.children.removeAll(); // This removes all game objects from the scene
+    this.drawBoard();
   }
 }
 

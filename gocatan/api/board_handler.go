@@ -7,6 +7,8 @@ import (
 	"gocatan/board/models"
 	"gocatan/config"
 	"net/http"
+
+	"github.com/google/uuid"
 )
 
 func BoardHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,9 +31,15 @@ func BuildBoard(_ context.Context, cfg config.Config) models.GameBoard {
 	adjVerticies := engine.BuildAdjacentVerticesMap(vertices)
 	edges := engine.BuildEdges(concreteHexTiles)
 
+	verticesMap := make(map[uuid.UUID]models.Vertice)
+
+	for _, v := range vertices {
+		verticesMap[v.Id] = v
+	}
+
 	gb := models.GameBoard{
 		Tiles:             concreteHexTiles,
-		Vertices:          vertices,
+		Vertices:          verticesMap,
 		AdjacentVerticies: adjVerticies,
 		Edges:             edges,
 	}
