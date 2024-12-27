@@ -188,7 +188,9 @@ export class PlayGame extends Phaser.Scene {
       sprite.on("pointerdown", () => {
         const message = {
           MessageType: "vertexClicked",
-          Data: vertice.id,
+          Data: {
+            Id: vertice.id,
+          },
         };
 
         // Assuming you have a WebSocket connection stored in this.socket

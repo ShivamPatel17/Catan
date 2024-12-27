@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"gocatan/api"
 	"gocatan/board"
@@ -52,44 +53,79 @@ var clients = make(map[*websocket.Conn]bool) // Track all connected clients
 var stateMutex sync.Mutex                    // Mutex to handle concurrent access
 
 // WSMessage represents a WebSocket message
-type WSMessage struct {
-	MessageType string      `json:"messageType"`
-	Data        interface{} `json:"data,omitempty"`
+type BaseMessage struct {
+	MessageType string `json:"messageType"`
 }
 
-// WebSocket handler function
+type VertexClickedMessage struct {
+	BaseMessage
+	Data VertexClickedMessageData `json:"Data"`
+}
+
+type VertexClickedMessageData struct {
+	Id string `json:"Id"`
+}
+
+type GameStateMessage struct {
+	BaseMessage
+	Data interface{} `json:"data"`
+}
+
 func wsHandler(ws *websocket.Conn) {
 	defer ws.Close()
-	clients[ws] = true // Add new client
-
-	// Send the current game state to the new client
-	sendGameState(ws)
 
 	for {
-		var message WSMessage
-		// Receive a message from the client
-		err := websocket.JSON.Receive(ws, &message)
-		if err != nil {
-			log.Println("Error receiving message:", err)
-			delete(clients, ws)
+		// Step 1: Read message from WebSocket
+		var msg []byte
+		if err := websocket.Message.Receive(ws, &msg); err != nil {
+			log.Println("Error reading message:", err)
 			break
 		}
 
-		log.Printf("Received message: %v\n", message)
-
-		// Handle the incoming message based on the message type
-		switch message.MessageType {
-		case "gameStateRequest":
-			// Client requests the current game state
-			sendGameState(ws)
-		case "action":
-			// Example: Handle a player action, update the game state
-			handlePlayerAction(message)
-		case "vertexClicked":
-			deleteVertex(ws)
-		default:
-			log.Println("Unknown message type:", message.MessageType)
+		// Step 2: Parse the message
+		parsedMessage, err := parseWebSocketMessage(msg)
+		if err != nil {
+			log.Println("Error parsing message:", err)
+			continue
 		}
+
+		// Step 3: Handle the parsed message
+		switch m := parsedMessage.(type) {
+		case GameStateMessage:
+			log.Printf("Game State: %s\n", m.Data)
+			sendGameState(ws)
+		case VertexClickedMessage:
+			deleteVertex(m)
+		default:
+			log.Println("Unknown message type")
+		}
+	}
+}
+
+func parseWebSocketMessage(data []byte) (interface{}, error) {
+	// Step 1: Unmarshal into BaseMessage to extract the MessageType
+	var baseMsg BaseMessage
+	if err := json.Unmarshal(data, &baseMsg); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal base message: %w", err)
+	}
+
+	// Step 2: Unmarshal into the appropriate specific struct
+	switch baseMsg.MessageType {
+	case "gameState":
+		var msg GameStateMessage
+		if err := json.Unmarshal(data, &msg); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal gameState message: %w", err)
+		}
+
+		return msg, nil
+	case "vertexClicked":
+		var msg VertexClickedMessage
+		if err := json.Unmarshal(data, &msg); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal gameState message: %w", err)
+		}
+		return msg, nil
+	default:
+		return nil, fmt.Errorf("unknown message type: %s", baseMsg.MessageType)
 	}
 }
 
@@ -98,9 +134,11 @@ func sendGameState(ws *websocket.Conn) {
 	stateMutex.Lock()
 	defer stateMutex.Unlock()
 
-	msg := WSMessage{
-		MessageType: "gameState",
-		Data:        gameState,
+	msg := GameStateMessage{
+		BaseMessage: BaseMessage{
+			MessageType: "gameState",
+		},
+		Data: gameState,
 	}
 
 	err := websocket.JSON.Send(ws, msg)
@@ -110,7 +148,7 @@ func sendGameState(ws *websocket.Conn) {
 }
 
 // Example function to handle player actions
-func handlePlayerAction(message WSMessage) {
+func handlePlayerAction(message BaseMessage) {
 	stateMutex.Lock()
 	defer stateMutex.Unlock()
 
@@ -128,9 +166,11 @@ func broadcastGameState() {
 	defer stateMutex.Unlock()
 
 	for client := range clients {
-		err := websocket.JSON.Send(client, WSMessage{
-			MessageType: "gameState",
-			Data:        gameState,
+		err := websocket.JSON.Send(client, GameStateMessage{
+			BaseMessage: BaseMessage{
+				MessageType: "gameState",
+			},
+			Data: gameState,
 		})
 		if err != nil {
 			log.Println("Error sending game state to client:", err)
@@ -140,8 +180,8 @@ func broadcastGameState() {
 	}
 }
 
-func deleteVertex(ws any) {
-	fmt.Printf("in the deleteVertex func with ws: %s", ws)
+func deleteVertex(v VertexClickedMessage) {
+	fmt.Printf("in the deleteVertex func with ws:%s\n", v.Data.Id)
 }
 
 // CORS middleware function
