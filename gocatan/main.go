@@ -17,7 +17,6 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/roll", board.RollHandler)
-	// mux.HandleFunc("/board", api.BoardHandler)
 	mux.HandleFunc("/config", api.GetConfigHandler)
 
 	ctx := context.Background()

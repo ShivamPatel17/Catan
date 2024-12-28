@@ -1,5 +1,4 @@
-import { gameConfig } from "./gameConfig.js";
-import { fetchData } from "./fetchData.js";
+import { phaserGameCfg, loadBackendConfig } from "config/catanConfig";
 import Phaser from "phaser";
 
 export let gameConfigGo = null; // Declare and export gameConfigGo
@@ -7,12 +6,11 @@ export let gameConfigGo = null; // Declare and export gameConfigGo
 (async function () {
   try {
     // Fetch the game configuration
-    const url = "http://localhost:3000/config";
-    gameConfigGo = await fetchData(url); // Update the exported variable
+    var configIsloaded = await loadBackendConfig();
 
-    if (gameConfigGo) {
+    if (configIsloaded) {
       console.log("starting game");
-      let game = new Phaser.Game(gameConfig);
+      let game = new Phaser.Game(phaserGameCfg);
       window.focus();
     } else {
       console.error("Failed to load game configuration.");

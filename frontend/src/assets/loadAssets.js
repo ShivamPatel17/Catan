@@ -1,4 +1,4 @@
-import { gameOptions } from "./gameConfig.js";
+import { catanCfg } from "config/catanConfig";
 
 export function loadAssets(scene) {
   loadDiceSpritesheet(scene);
@@ -10,8 +10,8 @@ function loadDiceSpritesheet(scene) {
     "redDie",
     "boardgamePack_v2/Spritesheets/diceRed.png",
     {
-      frameWidth: gameOptions.diceWidth,
-      frameHeight: gameOptions.diceHeight,
+      frameWidth: catanCfg.diceWidth,
+      frameHeight: catanCfg.diceHeight,
     },
   );
 }

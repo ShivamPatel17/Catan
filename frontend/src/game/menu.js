@@ -1,5 +1,5 @@
-import { loadAssets } from "./loadAssets.js";
-import { gameConfig } from "./gameConfig.js";
+import { loadAssets } from "assets/loadAssets";
+import { catanCfg } from "config/catanConfig";
 
 export class MenuScene extends Phaser.Scene {
   constructor() {
@@ -8,7 +8,7 @@ export class MenuScene extends Phaser.Scene {
 
   preload() {
     // defintely don't need to preload all this. Just adding to get quick access to the sprites
-    loadAssets(this, gameConfig);
+    loadAssets(this, catanCfg);
   }
 
   create() {

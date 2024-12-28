@@ -16,9 +16,6 @@ export class PlayGame extends Phaser.Scene {
 
   async create() {
     this.setupWebSocket();
-    // Fetch the initial game state from the backend
-    //this.gameState = await this.fetchGameState();
-    console.log(this.gameState);
     this.socket.send(JSON.stringify("joining"));
     this.drawBoard();
     this.die = this.add.sprite(1000, 800, "redDie").setInteractive();
@@ -27,7 +24,6 @@ export class PlayGame extends Phaser.Scene {
   }
 
   drawBoard() {
-    console.log("drawing board");
     this.children.removeAll(true);
     this.loadhex();
     this.loadVertices();
@@ -45,13 +41,9 @@ export class PlayGame extends Phaser.Scene {
 
     // Handle incoming messages from the server
     this.socket.onmessage = (event) => {
-      console.log("MESSAGE RECEIVED!");
-      console.log(event); // Log the entire event
-
       // Check if the message is a Blob
       if (event.data instanceof Blob) {
         event.data.text().then((text) => {
-          console.log("Raw message data:", text); // Log the raw message data as a string
           try {
             const message = JSON.parse(text); // Parse the string as JSON
             console.log("Parsed JSON message:", message); // Log the parsed JSON
@@ -84,27 +76,12 @@ export class PlayGame extends Phaser.Scene {
   }
 
   handleServerMessage(message) {
-    console.log(message);
-    console.log("handling server message?!?");
     switch (message.messageType) {
       case "gameState":
         this.updateGameState(message.data); // Use the new state from the message
         break;
-      case "actionResult":
-        this.processActionResult(message.data);
-        break;
-      // Handle other message types...
       default:
         console.warn("Unknown message type:", message.messageType);
-    }
-  }
-
-  async fetchGameState() {
-    try {
-      const response = await fetch("http://localhost:3000/board");
-      return await response.json();
-    } catch (error) {
-      console.error("Failed to fetch game state:", error);
     }
   }
 
@@ -153,7 +130,6 @@ export class PlayGame extends Phaser.Scene {
       }
       sprite.setDisplaySize(config.HexWidth, config.HexHeight);
       sprite.setInteractive();
-      setOnHover(sprite);
     }
   }
 
@@ -166,7 +142,7 @@ export class PlayGame extends Phaser.Scene {
 
     let vertices = this.gameState.vertices;
 
-    Object.entries(vertices).forEach(([uuid, vertice]) => {
+    Object.entries(vertices).forEach(([_, vertice]) => {
       // Check if vertice contains the necessary properties (x, y, id)
       if (
         typeof vertice.x !== "number" ||
@@ -184,9 +160,6 @@ export class PlayGame extends Phaser.Scene {
       sprite.setDisplaySize(30, 30);
       sprite.setInteractive();
       sprite.setDepth(2);
-
-      // Set hover functionality
-      setOnHover(sprite);
 
       // Add click functionality that sends WebSocket message with vertice id
       sprite.on("pointerdown", () => {
@@ -224,29 +197,14 @@ export class PlayGame extends Phaser.Scene {
   }
 
   updateGameState(newState) {
-    // Ensure newState exists and has the expected properties before updating game state
     console.log(newState);
     if (!newState || !newState.tiles || !newState.vertices || !newState.edges) {
       console.error("Received invalid game state from server");
       return;
     }
 
-    console.log(newState);
-    // Update the local game state with the new state
     this.gameState = newState;
-    console.log("HERE!!!");
-    console.log(this.gameState);
-
     this.drawBoard();
   }
-}
-
-function setOnHover(sprite) {
-  sprite.on("pointerover", function () {
-    sprite.setTint(0xff0000); // Change the color of the sprite on hover
-  });
-  sprite.on("pointerout", function () {
-    sprite.clearTint(); // Remove the tint on pointer out
-  });
 }
 
