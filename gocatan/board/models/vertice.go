@@ -7,10 +7,11 @@ import (
 )
 
 type Vertice struct {
-	Id uuid.UUID `json:"id"`
-	X  float64   `json:"x"`
-	Y  float64   `json:"y"`
-	Building
+	Uuid     uuid.UUID `json:"uuid"`
+	X        float64   `json:"x"`
+	Y        float64   `json:"y"`
+	Player   Player    `json:"player"`
+	Building `json:"building"`
 }
 
 type Building int
@@ -24,9 +25,9 @@ func NewVertice(x float64, y float64) Vertice {
 	uuid, _ := uuid.NewUUID()
 
 	return Vertice{
-		Id: uuid,
-		X:  x,
-		Y:  y,
+		Uuid: uuid,
+		X:    x,
+		Y:    y,
 	}
 }
 

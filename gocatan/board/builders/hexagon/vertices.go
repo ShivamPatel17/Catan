@@ -63,7 +63,7 @@ func (e *HexagonEngine) BuildAdjacentVerticesMap(vertices []models.Vertice) map[
 				adjArr = append(adjArr, vert2)
 			}
 		}
-		adjVertsMap[vert1.Id] = adjArr
+		adjVertsMap[vert1.Uuid] = adjArr
 	}
 
 	return adjVertsMap

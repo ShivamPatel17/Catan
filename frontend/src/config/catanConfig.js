@@ -12,17 +12,37 @@ export async function loadBackendConfig() {
     // Fetch the game configuration
     const url = "http://localhost:3000/config";
     let backendConfig = await fetchData(url); // Update the exported variable
-    catanCfg = { ...catanCfg, ...backendConfig };
+    CatanCfg = { ...CatanCfg, ...backendConfig };
     return true;
   } catch (error) {
     console.error("Error initializing the game: ", error);
   }
 }
 
-// Catan board game config
-export let catanCfg = {
+// Frontend Catan board game config
+export let CatanCfg = {
   diceWidth: 64,
   diceHeight: 64,
+  hexagons: {
+    width: 440 * 0.4, // hex sprite is 440px wide
+    height: 508 * 0.4, // hex sprite is 508px tall
+    depth: 1,
+  },
+  settlements: {
+    depth: 2,
+    width: 60,
+    height: 60,
+  },
+  openSettlements: {
+    depth: 2,
+    width: 20,
+    height: 20,
+  },
+  roads: {
+    depth: 2,
+    width: 30,
+    height: 20,
+  },
 };
 
 // Phaser Game Config

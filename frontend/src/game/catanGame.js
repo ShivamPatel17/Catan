@@ -1,7 +1,7 @@
 import { fetchData } from "utils/fetchData";
-import { catanCfg } from "config/catanConfig";
+import { CatanCfg } from "config/catanConfig";
 import { loadAssets } from "assets/loadAssets";
-import { DrawBoard } from "game/internal/drawBoard";
+import { DrawBoard } from "game/internal/createBoard";
 import Phaser from "phaser";
 
 export class PlayGame extends Phaser.Scene {
@@ -11,7 +11,7 @@ export class PlayGame extends Phaser.Scene {
   }
 
   preload() {
-    loadAssets(this, catanCfg);
+    loadAssets(this, CatanCfg);
   }
 
   async create() {
@@ -33,23 +33,11 @@ export class PlayGame extends Phaser.Scene {
     }
   }
 
-  async rollDie() {
-    try {
-      const number = await fetchData("http://localhost:3000/roll");
-      console.log("Random number from backend:", number);
-      const dieNumberToFrame = [1, 2, 5, 6, 4, 0];
-      this.die.setFrame(dieNumberToFrame[number - 1]);
-    } catch (error) {
-      console.error("Error rolling die:", error);
-    }
-  }
-
   updateGameState(newState) {
     if (!newState || !newState.tiles || !newState.vertices || !newState.edges) {
       console.error("Received invalid game state from server");
       return;
     }
-    console.log("should be update");
 
     this.gameState = newState;
     DrawBoard(this);
@@ -98,6 +86,17 @@ export class PlayGame extends Phaser.Scene {
     this.socket.onerror = (error) => {
       console.error("WebSocket error:", error);
     };
+  }
+
+  async rollDie() {
+    try {
+      const number = await fetchData("http://localhost:3000/roll");
+      console.log("Random number from backend:", number);
+      const dieNumberToFrame = [1, 2, 5, 6, 4, 0];
+      this.die.setFrame(dieNumberToFrame[number - 1]);
+    } catch (error) {
+      console.error("Error rolling die:", error);
+    }
   }
 }
 

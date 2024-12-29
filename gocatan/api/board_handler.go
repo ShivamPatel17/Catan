@@ -31,10 +31,10 @@ func BuildBoard(_ context.Context, cfg config.Config) models.GameBoard {
 	adjVerticies := engine.BuildAdjacentVerticesMap(vertices)
 	edges := engine.BuildEdges(concreteHexTiles)
 
-	verticesMap := make(map[uuid.UUID]models.Vertice)
+	verticesMap := make(map[uuid.UUID]*models.Vertice)
 
 	for _, v := range vertices {
-		verticesMap[v.Id] = v
+		verticesMap[v.Uuid] = &v
 	}
 
 	gb := models.GameBoard{

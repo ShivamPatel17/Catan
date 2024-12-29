@@ -30,6 +30,9 @@ func (g *Game) WsHandler(ws *websocket.Conn) {
 		}
 
 		switch m := parsedMessage.(type) {
+		case types.BuildSettlementMessage:
+			g.BuildSettlement(m)
+			g.BroadcastGameState()
 		case types.VertexClickedMessage:
 			g.DeleteVertex(m)
 			g.BroadcastGameState()
@@ -55,10 +58,16 @@ func parseWebSocketMessage(data []byte) (interface{}, error) {
 		}
 
 		return msg, nil
+	case "buildSettlement":
+		var msg types.BuildSettlementMessage
+		if err := json.Unmarshal(data, &msg); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal buildSettlement message: %w", err)
+		}
+		return msg, nil
 	case "vertexClicked":
 		var msg types.VertexClickedMessage
 		if err := json.Unmarshal(data, &msg); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal gameState message: %w", err)
+			return nil, fmt.Errorf("failed to unmarshal vertexClicked message: %w", err)
 		}
 		return msg, nil
 	default:

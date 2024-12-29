@@ -56,8 +56,16 @@ func (g *Game) DeleteVertex(v types.VertexClickedMessage) {
 	if err != nil {
 		fmt.Printf("error parsing uuid in the delete Vertex func")
 	}
-	fmt.Printf("%d Vertices remaining", len(g.board.Vertices))
-	delete(g.board.Vertices, u)
 
-	fmt.Printf("in the delete !!! JVertex func with ws:%s\n", u)
+	delete(g.board.Vertices, u)
+}
+
+func (g *Game) BuildSettlement(b types.BuildSettlementMessage) error {
+	vertex, ok := g.board.Vertices[b.Data.VertexUuid]
+	if !ok {
+		return fmt.Errorf("invalid Vertex provided to build a settlement")
+	}
+
+	vertex.Building = models.Settlement
+	return nil
 }
