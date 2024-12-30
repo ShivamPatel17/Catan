@@ -19,10 +19,23 @@ export async function loadBackendConfig() {
   }
 }
 
-// Frontend Catan board game config
-export let CatanCfg = {
+// sprite config
+export let SpriteCfg = {
   diceWidth: 64,
   diceHeight: 64,
+};
+
+// Frontend Catan board game config
+export let CatanCfg = {
+  dice: {
+    red: {
+      x: 1200,
+      y: 800,
+    },
+    depth: 2,
+    width: 80,
+    height: 80,
+  },
   hexagons: {
     width: 440 * 0.4, // hex sprite is 440px wide
     height: 508 * 0.4, // hex sprite is 508px tall

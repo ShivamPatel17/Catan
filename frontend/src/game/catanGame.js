@@ -18,7 +18,6 @@ export class PlayGame extends Phaser.Scene {
     this.setupWebSocket();
     this.socket.send(JSON.stringify("joining"));
     DrawBoard(this);
-    this.die = this.add.sprite(1000, 800, "redDie").setInteractive();
     this.input.keyboard.on("keydown-SPACE", this.rollDie, this);
     this.die.on("pointerdown", () => this.scene.start("MenuScene")); // Start game on click
   }

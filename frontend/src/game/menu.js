@@ -11,7 +11,7 @@ export class MenuScene extends Phaser.Scene {
   }
 
   create() {
-    const logo = this.add.sprite(600, 350, "redDie").setInteractive();
+    const logo = this.add.sprite(600, 350, "red_die").setInteractive();
     logo.setInteractive();
     logo.on("pointerdown", () => this.scene.start("PlayGame")); // Start game on click
   }

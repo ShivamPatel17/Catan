@@ -1,4 +1,4 @@
-import { CatanCfg } from "config/catanConfig";
+import { SpriteCfg } from "config/catanConfig";
 
 /**
  * @param  {Phaser.Scene} scene
@@ -18,6 +18,7 @@ const WheatHex = "wheat_hex";
 const OpenSettlement = "open_settlement";
 const Settlement = "settlement";
 const TopRoad = "top_road";
+const RedDie = "red_die";
 
 export const Assets = {
   BrickHex,
@@ -28,20 +29,19 @@ export const Assets = {
   OpenSettlement,
   Settlement,
   TopRoad,
+  RedDie,
 };
 
 /**
  * @param  {Phaser.Scene} scene
  */
 function loadDiceSpritesheet(scene) {
-  scene.load.spritesheet(
-    "redDie",
-    "boardgamePack_v2/Spritesheets/diceRed.png",
-    {
-      frameWidth: CatanCfg.diceWidth,
-      frameHeight: CatanCfg.diceHeight,
-    },
-  );
+  console.log(SpriteCfg.diceHeight);
+  console.log(RedDie);
+  scene.load.spritesheet(RedDie, "boardgamePack_v2/Spritesheets/diceRed.png", {
+    frameWidth: SpriteCfg.diceWidth,
+    frameHeight: SpriteCfg.diceHeight,
+  });
 }
 
 /**

@@ -1,6 +1,7 @@
 import { DrawVertex } from "game/internal/createVertex";
 import { DrawHexagon } from "game/internal/createHexagon";
 import { DrawEdge } from "game/internal/createEdge";
+import { CreateDice } from "game/internal/createDice";
 
 /**
  * @param  {Phaser.Scene} scene
@@ -57,15 +58,15 @@ function drawVertices(scene) {
  */
 function drawEdges(scene) {
   let edges = scene.gameState.edges;
-  for (let i = 0; i < edges.length; i++) {
-    DrawEdge(scene, edges[i]);
-  }
+  Object.entries(edges).forEach(([_, edge]) => {
+    DrawEdge(scene, edge);
+  });
 }
 
 /**
  * @param  {Phaser.Scene} scene
  */
 function drawDie(scene) {
-  scene.die = scene.add.sprite(1000, 800, "redDie").setInteractive();
+  CreateDice(scene);
 }
 

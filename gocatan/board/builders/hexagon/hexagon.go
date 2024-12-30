@@ -1,7 +1,6 @@
 package hexagon
 
 import (
-	"fmt"
 	"gocatan/board/models"
 	mathhelper "gocatan/internal/math"
 	"math/rand"

@@ -15,7 +15,7 @@ const (
 )
 
 type Edge struct {
-	Id          uuid.UUID   `json:"id"`
+	Uuid        uuid.UUID   `json:"uuid"`
 	X           float64     `json:"x"`
 	Y           float64     `json:"y"`
 	Orientation Orientation `json:"orientation"`
@@ -24,7 +24,7 @@ type Edge struct {
 func NewEdge(x float64, y float64, o Orientation) Edge {
 	uuid, _ := uuid.NewUUID()
 	return Edge{
-		Id:          uuid,
+		Uuid:        uuid,
 		X:           x,
 		Y:           y,
 		Orientation: o,

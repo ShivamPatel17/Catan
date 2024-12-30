@@ -18,9 +18,6 @@ export class PlayGame extends Phaser.Scene {
     this.setupWebSocket();
     this.socket.send(JSON.stringify("joining"));
     this.drawBoard();
-    this.die = this.add.sprite(1000, 800, "redDie").setInteractive();
-    this.input.keyboard.on("keydown-SPACE", this.rollDie, this);
-    this.die.on("pointerdown", () => this.scene.start("MenuScene")); // Start game on click
   }
 
   drawBoard() {
@@ -82,17 +79,6 @@ export class PlayGame extends Phaser.Scene {
         break;
       default:
         console.warn("Unknown message type:", message.messageType);
-    }
-  }
-
-  async rollDie() {
-    try {
-      const number = await fetchData("http://localhost:3000/roll");
-      console.log("Random number from backend:", number);
-      const dieNumberToFrame = [1, 2, 5, 6, 4, 0];
-      this.die.setFrame(dieNumberToFrame[number - 1]);
-    } catch (error) {
-      console.error("Error rolling die:", error);
     }
   }
 
