@@ -37,8 +37,14 @@ func BuildBoard(_ context.Context, cfg config.Config) models.GameBoard {
 		verticesMap[v.Uuid] = &v
 	}
 
+	concreteHexTilesMap := make(map[uuid.UUID]*models.ConcreteHexagonTile)
+
+	for _, t := range concreteHexTiles {
+		concreteHexTilesMap[t.Uuid] = t
+	}
+
 	gb := models.GameBoard{
-		Tiles:             concreteHexTiles,
+		Tiles:             concreteHexTilesMap,
 		Vertices:          verticesMap,
 		AdjacentVerticies: adjVerticies,
 		Edges:             edges,

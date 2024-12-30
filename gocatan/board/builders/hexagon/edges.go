@@ -6,13 +6,13 @@ import (
 	"math"
 )
 
-func (e *HexagonEngine) BuildEdges(concreteTiles []models.ConcreteHexagonTile) []models.Edge {
+func (e *HexagonEngine) BuildEdges(concreteTiles []*models.ConcreteHexagonTile) []models.Edge {
 	allEdges := e.buildAllEdges(concreteTiles)
 	dedupedEdges := e.dedupEdges(allEdges)
 	return dedupedEdges
 }
 
-func (e *HexagonEngine) buildAllEdges(concreteTiles []models.ConcreteHexagonTile) []models.Edge {
+func (e *HexagonEngine) buildAllEdges(concreteTiles []*models.ConcreteHexagonTile) []models.Edge {
 	edges := make([]models.Edge, 0)
 	for _, tile := range concreteTiles {
 		x, y, height := tile.X, tile.Y, mathhelper.HeightOfEqualateralTriangle(e.HexSideSize)

@@ -7,13 +7,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func (e *HexagonEngine) BuildVertices(concreteTiles []models.ConcreteHexagonTile) []models.Vertice {
+func (e *HexagonEngine) BuildVertices(concreteTiles []*models.ConcreteHexagonTile) []models.Vertice {
 	allVertices := e.buildAllVertices(concreteTiles)
 	dedupedVertices := dedup(allVertices)
 	return dedupedVertices
 }
 
-func (e *HexagonEngine) buildAllVertices(concreteTiles []models.ConcreteHexagonTile) []models.Vertice {
+func (e *HexagonEngine) buildAllVertices(concreteTiles []*models.ConcreteHexagonTile) []models.Vertice {
 	vertices := make([]models.Vertice, 0)
 	for _, concreteTile := range concreteTiles {
 		x, y := concreteTile.X, concreteTile.Y

@@ -54,7 +54,7 @@ func (g *Game) BroadcastGameState() {
 func (g *Game) DeleteVertex(v types.VertexClickedMessage) {
 	u, err := uuid.Parse(v.Data.Id)
 	if err != nil {
-		fmt.Printf("error parsing uuid in the delete Vertex func")
+		log.Printf("error parsing uuid in the delete Vertex func")
 	}
 
 	delete(g.board.Vertices, u)

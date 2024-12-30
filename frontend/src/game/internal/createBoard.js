@@ -22,9 +22,11 @@ export function DrawBoard(scene) {
  */
 function drawHexagons(scene) {
   let hexagons = scene.gameState.tiles;
-  for (let i = 0; i < hexagons.length; i++) {
-    DrawHexagon(scene, hexagons[i]);
-  }
+  console.log(scene.gameState);
+  console.log(hexagons.length);
+  Object.entries(hexagons).forEach(([_, hexagon]) => {
+    DrawHexagon(scene, hexagon);
+  });
 }
 
 /**

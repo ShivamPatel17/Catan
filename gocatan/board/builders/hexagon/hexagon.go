@@ -1,31 +1,34 @@
 package hexagon
 
 import (
+	"fmt"
 	"gocatan/board/models"
 	mathhelper "gocatan/internal/math"
 	"math/rand"
+
+	"github.com/google/uuid"
 )
 
-func (e *HexagonEngine) BuildHexagons(relativeTiles *models.RelativeHexagonTile) ([](models.ConcreteHexagonTile), error) {
-	concreteTiles := make([]models.ConcreteHexagonTile, 0)
+func (e *HexagonEngine) BuildHexagons(relativeTiles *models.RelativeHexagonTile) ([]*models.ConcreteHexagonTile, error) {
+	concreteTiles := make([]*models.ConcreteHexagonTile, 0)
 	ConcreteTile := relativeTiles.Concrete
 	if ConcreteTile != nil {
-		concreteTiles = append(concreteTiles, models.ConcreteHexagonTile{
+		concreteTiles = append(concreteTiles, &models.ConcreteHexagonTile{
 			X: ConcreteTile.X,
 			Y: ConcreteTile.Y,
 		})
 	}
-	e.buildRelativeHexTiles(&relativeTiles.AdjacentTiles, &concreteTiles[0], &concreteTiles)
-	assignResources(&concreteTiles)
+	e.buildRelativeHexTiles(relativeTiles.AdjacentTiles, concreteTiles[0], &concreteTiles)
+	assignResources(concreteTiles)
 	return concreteTiles, nil
 }
 
-func (e *HexagonEngine) buildRelativeHexTiles(tiles *[]models.DirectionalHexagonTile, relativeTo *models.ConcreteHexagonTile, concreteTiles *[]models.ConcreteHexagonTile) {
+func (e *HexagonEngine) buildRelativeHexTiles(tiles []*models.DirectionalHexagonTile, relativeTo *models.ConcreteHexagonTile, concreteTiles *[]*models.ConcreteHexagonTile) {
 	if relativeTo == nil {
 		return
 	}
 
-	for _, directionalTile := range *tiles {
+	for _, directionalTile := range tiles {
 		var ConcreteTile models.ConcreteHexagonTile
 		switch directionalTile.Direction {
 		case models.TopRight:
@@ -60,14 +63,16 @@ func (e *HexagonEngine) buildRelativeHexTiles(tiles *[]models.DirectionalHexagon
 			}
 		}
 
-		*concreteTiles = append(*concreteTiles, ConcreteTile)
-		e.buildRelativeHexTiles(&directionalTile.RelativeHexTile.AdjacentTiles, &ConcreteTile, concreteTiles)
+		*concreteTiles = append(*concreteTiles, &ConcreteTile)
+		e.buildRelativeHexTiles(directionalTile.RelativeHexTile.AdjacentTiles, &ConcreteTile, concreteTiles)
 	}
 }
 
-func assignResources(concreteTiles *[]models.ConcreteHexagonTile) {
-	for i := range *concreteTiles {
-		(*concreteTiles)[i].Resource = getRandomResource()
+func assignResources(concreteTiles []*models.ConcreteHexagonTile) {
+	for _, tile := range concreteTiles {
+		u, _ := uuid.NewV7()
+		tile.Uuid = u
+		tile.Resource = getRandomResource()
 	}
 }
 func getRandomResource() models.Resource {

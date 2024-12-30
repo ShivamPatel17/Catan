@@ -1,5 +1,9 @@
 package models
 
+import (
+	"github.com/google/uuid"
+)
+
 type Direction int
 
 const (
@@ -27,13 +31,13 @@ type DirectionalHexagonTile struct {
 }
 
 type RelativeHexagonTile struct {
-	AdjacentTiles []DirectionalHexagonTile `json:"adjacent_tiles"`
-	Concrete      *ConcreteHexagonTile     `json:"concrete"`
+	AdjacentTiles []*DirectionalHexagonTile `json:"adjacent_tiles"`
+	Concrete      *ConcreteHexagonTile      `json:"concrete"`
 }
 
 type ConcreteHexagonTile struct {
-	Id       int64    `json:"id"`
-	X        float64  `json:"x"`
-	Y        float64  `json:"y"`
-	Resource Resource `json:"resource"`
+	Uuid     uuid.UUID `json:"uuid"`
+	X        float64   `json:"x"`
+	Y        float64   `json:"y"`
+	Resource Resource  `json:"resource"`
 }
