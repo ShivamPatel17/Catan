@@ -35,6 +35,12 @@ func (g *Game) AddClient(ws *websocket.Conn) {
 func (g *Game) BroadcastGameState() {
 	g.mutex.Lock()
 	defer g.mutex.Unlock()
+	fmt.Printf("number of clients is %d\n", len(g.clients))
+
+	for ws := range g.clients {
+		fmt.Println(ws)
+	}
+	fmt.Println()
 
 	for client := range g.clients {
 		err := websocket.JSON.Send(client, types.GameStateMessage{

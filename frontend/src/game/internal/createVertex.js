@@ -6,7 +6,7 @@ import {
 /**
  * @param  {Phaser.Scene} scene
  */
-export function DrawVertex(scene, vertex) {
+export function CreateVertex(scene, vertex) {
   switch (vertex.building) {
     // building == 0 , open settlement
     case 0:

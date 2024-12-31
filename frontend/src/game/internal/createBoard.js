@@ -1,6 +1,6 @@
-import { DrawVertex } from "game/internal/createVertex";
-import { DrawHexagon } from "game/internal/createHexagon";
-import { DrawEdge } from "game/internal/createEdge";
+import { CreateVertex } from "game/internal/createVertex";
+import { CreateHexagon } from "game/internal/createHexagon";
+import { CreateEdge } from "game/internal/createEdge";
 import { CreateDice } from "game/internal/createDice";
 
 /**
@@ -12,61 +12,51 @@ export function DrawBoard(scene) {
     return;
   }
   scene.children.removeAll(scene);
-  drawHexagons(scene);
-  drawEdges(scene);
-  drawVertices(scene);
-  drawDie(scene);
+  createHexagons(scene);
+  createEdges(scene);
+  createVertices(scene);
+  createDie(scene);
 }
 
 /**
  * @param  {Phaser.Scene} scene
  */
-function drawHexagons(scene) {
+function createHexagons(scene) {
   let hexagons = scene.gameState.tiles;
   console.log(scene.gameState);
   console.log(hexagons.length);
   Object.entries(hexagons).forEach(([_, hexagon]) => {
-    DrawHexagon(scene, hexagon);
+    CreateHexagon(scene, hexagon);
   });
 }
 
 /**
  * @param  {Phaser.Scene} scene
  */
-function drawVertices(scene) {
+function createVertices(scene) {
   let vertices = scene.gameState.vertices;
 
   Object.entries(vertices).forEach(([_, vertice]) => {
-    // Check if vertice contains the necessary properties (x, y, id)
-    if (
-      typeof vertice.x !== "number" ||
-      typeof vertice.y !== "number" ||
-      typeof vertice.uuid !== "string"
-    ) {
-      console.error(
-        `Vertice at index ${i} is missing 'x', 'y', or 'id' properties`,
-      );
-      return;
-    }
-
-    DrawVertex(scene, vertice);
+    CreateVertex(scene, vertice);
   });
 }
 
 /**
  * @param  {Phaser.Scene} scene
  */
-function drawEdges(scene) {
+function createEdges(scene) {
   let edges = scene.gameState.edges;
+
+  return;
   Object.entries(edges).forEach(([_, edge]) => {
-    DrawEdge(scene, edge);
+    CreateEdge(scene, edge);
   });
 }
 
 /**
  * @param  {Phaser.Scene} scene
  */
-function drawDie(scene) {
+function createDie(scene) {
   CreateDice(scene);
 }
 

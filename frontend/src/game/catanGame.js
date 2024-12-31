@@ -4,9 +4,9 @@ import { loadAssets } from "assets/loadAssets";
 import { DrawBoard } from "game/internal/createBoard";
 import Phaser from "phaser";
 
-export class PlayGame extends Phaser.Scene {
+export class CatanGame extends Phaser.Scene {
   constructor() {
-    super({ key: "PlayGame" });
+    super({ key: "CatanGame" });
     this.gameState = null; // stores game state from the back end
   }
 
@@ -18,8 +18,6 @@ export class PlayGame extends Phaser.Scene {
     this.setupWebSocket();
     this.socket.send(JSON.stringify("joining"));
     DrawBoard(this);
-    this.input.keyboard.on("keydown-SPACE", this.rollDie, this);
-    this.die.on("pointerdown", () => this.scene.start("MenuScene")); // Start game on click
   }
 
   handleServerMessage(message) {

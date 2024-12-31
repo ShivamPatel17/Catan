@@ -1,5 +1,4 @@
-// Import the playGame class from playGame.js
-import { PlayGame } from "game/catanGame";
+import { CatanGame } from "game/catanGame";
 import { MenuScene } from "game/menu";
 import { fetchData } from "utils/fetchData";
 import Phaser from "phaser";
@@ -70,6 +69,6 @@ export let phaserGameCfg = {
     width: 1400,
     height: 900,
   },
-  scene: [PlayGame, MenuScene], // Reference to the playGame class
+  scene: [CatanGame, MenuScene], // Reference to the playGame class
 };
 

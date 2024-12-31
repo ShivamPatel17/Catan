@@ -12,7 +12,7 @@ const Sheep = "sheep";
 const Wood = "wood";
 const Wheat = "wheat";
 
-export function DrawHexagon(scene, hexagon) {
+export function CreateHexagon(scene, hexagon) {
   let x = hexagon.x;
   let y = hexagon.y;
   let resource = hexagon.resource;

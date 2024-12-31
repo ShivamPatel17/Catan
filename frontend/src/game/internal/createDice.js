@@ -17,6 +17,7 @@ async function rollDie() {
     const number = await fetchData("http://localhost:3000/roll");
     console.log("Random number from backend:", number);
     const dieNumberToFrame = [1, 2, 5, 6, 4, 0];
+    ej;
     die.setFrame(dieNumberToFrame[number - 1]);
   } catch (error) {
     console.error("Error rolling die:", error);
