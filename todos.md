@@ -1,8 +1,3 @@
-## todos from 12/29/2024
-
-- update all the vetticies/edges/hex shapes to maps
-- rename the "draw**\_" in internal to "create\_\_**"
-
 # Add for MVP
 
 - custom audio for my friends
