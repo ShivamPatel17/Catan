@@ -1,9 +1,17 @@
-package types
+package messages
 
 import "github.com/google/uuid"
 
+type BM interface {
+}
+
 type BaseMessage struct {
-	MessageType string `json:"messageType"`
+	MessageType string    `json:"messageType"`
+	PlayerUuid  uuid.UUID `json:"playerUuid"` // will need some auth at some point
+}
+
+type PlayerConnecting struct {
+	BaseMessage
 }
 
 type VertexClickedMessage struct {

@@ -2,7 +2,8 @@ import {
   DrawOpenSettlement,
   DrawSettlement,
 } from "assets/draw/drawSettlements";
-
+import { CreateBuildSettlementMessage } from "builders/createBuildSettlementMessage";
+import { SendWSMessage } from "utils/sendWSMessage";
 /**
  * @param  {Phaser.Scene} scene
  */
@@ -25,18 +26,7 @@ export function CreateVertex(scene, vertex) {
 }
 
 function buildSettlementOnVertex(scene, vertex) {
-  const message = {
-    MessageType: "buildSettlement",
-    Data: {
-      VertexUuid: vertex.uuid,
-    },
-  };
+  const message = CreateBuildSettlementMessage(vertex.uuid);
 
-  // Assuming you have a WebSocket connection stored in scene.socket
-  if (scene.socket && scene.socket.readyState === WebSocket.OPEN) {
-    scene.socket.send(JSON.stringify(message));
-  } else {
-    console.error("WebSocket connection is not open");
-  }
+  SendWSMessage(scene.socket, message);
 }
-

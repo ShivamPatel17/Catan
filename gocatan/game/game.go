@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"gocatan/api"
-	types "gocatan/api/wsmessages"
+	"gocatan/api/wsmessages"
 	"gocatan/board/models"
 	"gocatan/config"
 	"log"
@@ -14,10 +14,18 @@ import (
 	"golang.org/x/net/websocket"
 )
 
+type PlayerWithConnection struct {
+	player *models.Player
+	conn   *websocket.Conn
+}
+
 type Game struct {
-	board   models.GameBoard
-	mutex   sync.Mutex
+	board models.GameBoard
+	mutex sync.Mutex
+	// clients can be anyone.. consider people "spectating"
 	clients map[*websocket.Conn]bool
+	// for now, any new client will be considered a new player. Need the front end to have some way of identifying itself to limit this map
+	pwc map[uuid.UUID]PlayerWithConnection
 }
 
 func NewGame(ctx context.Context, cfg config.Config) *Game {
@@ -43,8 +51,8 @@ func (g *Game) BroadcastGameState() {
 	fmt.Println()
 
 	for client := range g.clients {
-		err := websocket.JSON.Send(client, types.GameStateMessage{
-			BaseMessage: types.BaseMessage{
+		err := websocket.JSON.Send(client, messages.GameStateMessage{
+			BaseMessage: messages.BaseMessage{
 				MessageType: "gameState",
 			},
 			Board: g.board,
@@ -57,7 +65,7 @@ func (g *Game) BroadcastGameState() {
 	}
 }
 
-func (g *Game) DeleteVertex(v types.VertexClickedMessage) {
+func (g *Game) DeleteVertex(v messages.VertexClickedMessage) {
 	u, err := uuid.Parse(v.Data.Id)
 	if err != nil {
 		log.Printf("error parsing uuid in the delete Vertex func")
@@ -66,7 +74,7 @@ func (g *Game) DeleteVertex(v types.VertexClickedMessage) {
 	delete(g.board.Vertices, u)
 }
 
-func (g *Game) BuildSettlement(b types.BuildSettlementMessage) error {
+func (g *Game) BuildSettlement(b messages.BuildSettlementMessage) error {
 	vertex, ok := g.board.Vertices[b.Data.VertexUuid]
 	if !ok {
 		return fmt.Errorf("invalid Vertex provided to build a settlement")

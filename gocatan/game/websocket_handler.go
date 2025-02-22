@@ -3,7 +3,7 @@ package game
 import (
 	"encoding/json"
 	"fmt"
-	types "gocatan/api/wsmessages"
+	messages "gocatan/api/wsmessages"
 	"golang.org/x/net/websocket"
 	"log"
 )
@@ -30,12 +30,14 @@ func (g *Game) WsHandler(ws *websocket.Conn) {
 		}
 
 		switch m := parsedMessage.(type) {
-		case types.BuildSettlementMessage:
+		case messages.BuildSettlementMessage:
 			g.BuildSettlement(m)
 			g.BroadcastGameState()
-		case types.VertexClickedMessage:
+		case messages.VertexClickedMessage:
 			g.DeleteVertex(m)
 			g.BroadcastGameState()
+		case messages.PlayerConnecting:
+			// g.AddPlayer(m, ws)
 		default:
 			log.Println("Unknown message type")
 		}
@@ -44,28 +46,35 @@ func (g *Game) WsHandler(ws *websocket.Conn) {
 
 func parseWebSocketMessage(data []byte) (interface{}, error) {
 	// Step 1: Unmarshal into BaseMessage to extract the MessageType
-	var baseMsg types.BaseMessage
+	var baseMsg messages.BaseMessage
 	if err := json.Unmarshal(data, &baseMsg); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal base message: %w", err)
 	}
+	fmt.Print("baseMsg", baseMsg)
 
 	// Step 2: Unmarshal into the appropriate specific struct
 	switch baseMsg.MessageType {
 	case "gameState":
-		var msg types.GameStateMessage
+		var msg messages.GameStateMessage
 		if err := json.Unmarshal(data, &msg); err != nil {
 			return nil, fmt.Errorf("failed to unmarshal gameState message: %w", err)
 		}
 
 		return msg, nil
 	case "buildSettlement":
-		var msg types.BuildSettlementMessage
+		var msg messages.BuildSettlementMessage
 		if err := json.Unmarshal(data, &msg); err != nil {
 			return nil, fmt.Errorf("failed to unmarshal buildSettlement message: %w", err)
 		}
 		return msg, nil
 	case "vertexClicked":
-		var msg types.VertexClickedMessage
+		var msg messages.VertexClickedMessage
+		if err := json.Unmarshal(data, &msg); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal vertexClicked message: %w", err)
+		}
+		return msg, nil
+	case "playerConnecting":
+		var msg messages.PlayerConnecting
 		if err := json.Unmarshal(data, &msg); err != nil {
 			return nil, fmt.Errorf("failed to unmarshal vertexClicked message: %w", err)
 		}

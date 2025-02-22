@@ -5,5 +5,5 @@ import (
 )
 
 type Player struct {
-	id uuid.UUID `json:"id"`
+	Uuid uuid.UUID `json:"uuid"`
 }

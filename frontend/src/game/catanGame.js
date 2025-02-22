@@ -3,6 +3,7 @@ import { CatanCfg } from "config/catanConfig";
 import { loadAssets } from "assets/loadAssets";
 import { DrawBoard } from "game/internal/createBoard";
 import Phaser from "phaser";
+import { SendWSMessage } from "utils/sendWSMessage";
 
 export class CatanGame extends Phaser.Scene {
   constructor() {
@@ -16,7 +17,12 @@ export class CatanGame extends Phaser.Scene {
 
   async create() {
     this.setupWebSocket();
-    this.socket.send(JSON.stringify("joining"));
+    // join as a new player
+    message = {
+      MessageType: "connect_player",
+      PlayerUuid: "bce4de6e-9374-4dd0-8c4c-aa808e682def",
+    };
+    SendWSMessage(this.socket, message);
     DrawBoard(this);
   }
 
@@ -96,4 +102,3 @@ export class CatanGame extends Phaser.Scene {
     }
   }
 }
-

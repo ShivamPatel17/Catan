@@ -14,7 +14,7 @@ export default defineConfig({
       config: path.resolve(__dirname, "./src/config"),
       assets: path.resolve(__dirname, "./src/assets"),
       game: path.resolve(__dirname, "./src/game"),
+      builders: path.resolve(__dirname, "./src/game/messages/builders"),
     },
   },
 });
-
