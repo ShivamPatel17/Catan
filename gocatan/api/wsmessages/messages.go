@@ -2,20 +2,35 @@ package messages
 
 import "github.com/google/uuid"
 
-type BM interface {
+type BaseMessage interface {
+	GetMessageType() string
+	GetPlayerUUID() uuid.UUID
 }
 
-type BaseMessage struct {
+type EmbeddedBaseMessage struct {
 	MessageType string    `json:"messageType"`
 	PlayerUuid  uuid.UUID `json:"playerUuid"` // will need some auth at some point
 }
 
+func (e *EmbeddedBaseMessage) GetMessageType() string {
+	return e.MessageType
+}
+
+func (e *EmbeddedBaseMessage) GetPlayerUUID() uuid.UUID {
+	return e.PlayerUuid
+}
+
 type PlayerConnecting struct {
-	BaseMessage
+	EmbeddedBaseMessage
+}
+
+type GameStateMessage struct {
+	EmbeddedBaseMessage
+	Board interface{} `json:"data"`
 }
 
 type VertexClickedMessage struct {
-	BaseMessage
+	EmbeddedBaseMessage
 	Data VertexClickedMessageData `json:"Data"`
 }
 
@@ -23,13 +38,8 @@ type VertexClickedMessageData struct {
 	Id string `json:"Id"`
 }
 
-type GameStateMessage struct {
-	BaseMessage
-	Board interface{} `json:"data"`
-}
-
 type BuildSettlementMessage struct {
-	BaseMessage
+	EmbeddedBaseMessage
 	Data BuildSettlementMessageData `json:"Data"`
 }
 

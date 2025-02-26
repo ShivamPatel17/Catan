@@ -29,3 +29,6 @@
 - get a javascript LSP
 - get teh matcher to stop bugging on on asteriks
 
+## Development
+
+- get some admin views going so I can easily see the state of games
