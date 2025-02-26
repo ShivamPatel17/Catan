@@ -2,13 +2,12 @@ import { CatanCfg } from "config/catanConfig";
 import { Assets } from "assets/loadAssets";
 
 export function DrawDie(scene, x, y) {
-  console.log(Assets.RedDie);
-  let die = scene.add.sprite(x, y, Assets.RedDie);
+	let die = scene.add.sprite(x, y, Assets.RedDie);
 
-  die.setDisplaySize(CatanCfg.dice.width, CatanCfg.dice.height);
-  die.setInteractive();
-  die.setDepth(CatanCfg.dice.depth);
+	die.setDisplaySize(CatanCfg.dice.width, CatanCfg.dice.height);
+	die.setInteractive();
+	die.setDepth(CatanCfg.dice.depth);
 
-  return die;
+	return die;
 }
 

@@ -14,7 +14,6 @@ export function SetupWebSocket(scene) {
 			event.data.text().then((text) => {
 				try {
 					const message = JSON.parse(text); // Parse the string as JSON
-					console.log("Parsed JSON message:", message); // Log the parsed JSON
 					scene.handleServerMessage(message); // Call your handler with the parsed message
 				} catch (error) {
 					console.error("Error parsing JSON:", error);
@@ -24,10 +23,9 @@ export function SetupWebSocket(scene) {
 			// If the message is not a Blob, handle it as a string (if needed)
 			try {
 				const message = JSON.parse(event.data); // Parse it directly as JSON
-				console.log("Parsed JSON message:", message);
 				scene.handleServerMessage(message);
 			} catch (error) {
-				console.error("Error parsing JSON:", error);
+				jonsole.error("Error parsing JSON:", error);
 			}
 		}
 	};

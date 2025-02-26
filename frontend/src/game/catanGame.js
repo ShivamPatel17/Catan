@@ -13,12 +13,12 @@ export class CatanGame extends Phaser.Scene {
 	}
 
 	init() {
-		console.log("in the init()")
+		console.log("CatanGame.init()")
 		SetupWebSocket(this);
 	}
 
 	preload() {
-		console.log("in the preload()")
+		console.log("CatanGame.preload()")
 		loadAssets(this, CatanCfg);
 	}
 
@@ -50,17 +50,5 @@ export class CatanGame extends Phaser.Scene {
 
 		this.gameState = newState;
 		DrawBoard(this);
-	}
-
-
-	async rollDie() {
-		try {
-			const number = await fetchData("http://localhost:3000/roll");
-			console.log("Random number from backend:", number);
-			const dieNumberToFrame = [1, 2, 5, 6, 4, 0];
-			this.die.setFrame(dieNumberToFrame[number - 1]);
-		} catch (error) {
-			console.error("Error rolling die:", error);
-		}
 	}
 }

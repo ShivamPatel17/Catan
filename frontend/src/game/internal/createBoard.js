@@ -23,8 +23,6 @@ export function DrawBoard(scene) {
  */
 function createHexagons(scene) {
 	let hexagons = scene.gameState.tiles;
-	console.log(scene.gameState);
-	console.log(hexagons.length);
 	Object.entries(hexagons).forEach(([_, hexagon]) => {
 		CreateHexagon(scene, hexagon);
 	});
