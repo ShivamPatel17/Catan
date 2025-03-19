@@ -32,3 +32,4 @@
 ## Development
 
 - get some admin views going so I can easily see the state of games
+- need to start passing context around everywhere

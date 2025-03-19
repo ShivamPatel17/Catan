@@ -26,21 +26,22 @@ type PlayerConnecting struct {
 
 type GameStateMessage struct {
 	EmbeddedBaseMessage
-	Board interface{} `json:"data"`
+	Board      interface{} `json:"data"`
+	PlayerData interface{} `json:"playerData"`
 }
 
 type VertexClickedMessage struct {
 	EmbeddedBaseMessage
-	Data VertexClickedMessageData `json:"Data"`
+	Data VertexClickedMessageData `json:"data"`
 }
 
 type VertexClickedMessageData struct {
-	Id string `json:"Id"`
+	Id string `json:"id"`
 }
 
 type BuildSettlementMessage struct {
 	EmbeddedBaseMessage
-	Data BuildSettlementMessageData `json:"Data"`
+	Data BuildSettlementMessageData `json:"data"`
 }
 
 type BuildSettlementMessageData struct {

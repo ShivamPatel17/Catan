@@ -5,7 +5,7 @@ FROM node:23
 WORKDIR /app
 
 # Copy Yarn cache into the container
-COPY yarn_cache /usr/local/share/.cache/yarn
+# COPY yarn_cache /usr/local/share/.cache/yarn
 
 # Copy package.json and yarn.lock to leverage Docker cache
 COPY package.json yarn.lock ./

@@ -2,6 +2,7 @@ import { CreateVertex } from "game/internal/createVertex";
 import { CreateHexagon } from "game/internal/createHexagon";
 import { CreateEdge } from "game/internal/createEdge";
 import { CreateDice } from "game/internal/createDice";
+import { CreateUserData } from "./createUserData";
 
 /**
  * @param  {Phaser.Scene} scene
@@ -16,6 +17,7 @@ export function DrawBoard(scene) {
 	createEdges(scene);
 	createVertices(scene);
 	createDie(scene);
+	createUserData(scene);
 }
 
 /**
@@ -58,3 +60,11 @@ function createDie(scene) {
 	CreateDice(scene);
 }
 
+
+
+/**
+ * @param  {Phaser.Scene} scene
+ */
+function createUserData(scene) {
+	CreateUserData(scene);
+}

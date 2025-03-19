@@ -6,7 +6,6 @@ import { CatanCfg } from "config/catanConfig";
  * @param  {Phaser.Scene} scene
  */
 export function CreateDice(scene) {
-	console.log(CatanCfg.dice.red.x);
 	let die = DrawDie(scene, CatanCfg.dice.red.x, CatanCfg.dice.red.y);
 	scene.input.keyboard.on("keydown-SPACE", () => rollDie(), scene);
 	die.on("pointerdown", () => scene.scene.start("MenuScene")); // Start game on click

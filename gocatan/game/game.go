@@ -44,7 +44,7 @@ func (g *Game) BroadcastGameState() {
 	fmt.Printf("number of clients is %d\n", len(g.pwc))
 
 	for _, p := range g.pwc {
-		err := g.SendGameStateToConnection(p.conn)
+		err := g.SendGameStateToConnection(&p)
 		if err != nil {
 			log.Println(err)
 			delete(g.pwc, p.player.Uuid) // remove disconnected clients
@@ -54,10 +54,11 @@ func (g *Game) BroadcastGameState() {
 }
 
 // TODO: refactor to accept the map instead of relying on the internals of the game
-func (g *Game) SendGameStateToConnection(c *websocket.Conn) error {
-	err := websocket.JSON.Send(c, messages.GameStateMessage{
+func (g *Game) SendGameStateToConnection(p *PlayerWithConnection) error {
+	err := websocket.JSON.Send(p.conn, messages.GameStateMessage{
 		EmbeddedBaseMessage: messages.EmbeddedBaseMessage{
 			MessageType: "gameState",
+			PlayerUuid:  p.player.Uuid,
 		},
 		Board: g.board,
 	})

@@ -9,11 +9,13 @@ import (
 // this should be called by the "lobby" at some point
 // for now, it's called by the websocket handler
 func (g *Game) AddPlayer(m messages.BaseMessage, c *websocket.Conn) {
-	g.SendGameStateToConnection(c)
-	g.pwc[m.GetPlayerUUID()] = PlayerWithConnection{
+	pwc := PlayerWithConnection{
 		player: &models.Player{
 			Uuid: m.GetPlayerUUID(),
 		},
 		conn: c,
 	}
+	g.pwc[m.GetPlayerUUID()] = pwc
+
+	g.SendGameStateToConnection(&pwc)
 }
